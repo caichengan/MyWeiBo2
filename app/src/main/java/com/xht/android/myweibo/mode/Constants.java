@@ -3,6 +3,18 @@ package com.xht.android.myweibo.mode;
 import android.os.Environment;
 
 public class Constants {
+
+
+	public static final String App_Key ="954912445";
+	public static final String App_Secret = "1ee30049b2dbc7eaf93b19d2a3daae72";
+	/*
+
+	App Key：
+		954912445
+redirect_url=http://open.weibo.com/apps/3564760100/954912445/oauth
+	App Secret：
+		1ee30049b2dbc7eaf93b19d2a3daae72
+     */
 	/*
 	 * 外部存储器的根目录
 	 */

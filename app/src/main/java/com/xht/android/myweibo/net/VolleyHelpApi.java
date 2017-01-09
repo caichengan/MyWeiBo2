@@ -132,4 +132,7 @@ public class VolleyHelpApi extends BaseApi{
 	}
 
 
+	public void getMainData(int uid, APIListener apiListener) {
+
+	}
 }
