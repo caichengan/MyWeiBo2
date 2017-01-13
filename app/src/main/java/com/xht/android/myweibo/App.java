@@ -5,16 +5,11 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.Volley;
-import com.xht.android.myweibo.ceche.LruCacheManager;
+
 import com.xht.android.myweibo.mode.Constants;
 import com.xht.android.myweibo.utils.LogHelper;
 import com.xht.android.myweibo.utils.Utils;
@@ -25,11 +20,6 @@ public class App extends Application {
 
 	private static final String TAG = "App";
 	private static App sAppInstance;
-	
-	private RequestQueue mRequestQueue;
-	private ImageLoader mImageLoader;
-	private LruCacheManager mLruCacheManager;
-
 
 	public static App getInstance() {
 		return sAppInstance;
@@ -40,8 +30,6 @@ public class App extends Application {
 		super.onCreate();
 		sAppInstance = this;
 		LogHelper.i(TAG,"--------");
-		mLruCacheManager = LruCacheManager.getInstance(getApplicationContext());
-
 
 
 		init();
@@ -70,34 +58,7 @@ public class App extends Application {
 		
 	}
 	
-	public RequestQueue getRequestQueue() {
-		if (mRequestQueue == null) {
-			mRequestQueue = Volley.newRequestQueue(getApplicationContext());
-		}
-		return mRequestQueue;
-	}
-	
-	public void addToRequestQueue(Request<?> req, String tag) {
-		req.setTag(TextUtils.isEmpty(tag) ? TAG : tag);
-		getRequestQueue().add(req);
-	}
-	
-	public void cancelPendingRequests(Object tag) {
-		if (mRequestQueue != null) {
-			mRequestQueue.cancelAll(tag);
-		}
-	}
-	
-	public ImageLoader getImageLoader() {
-		if (mImageLoader == null) {
-			mImageLoader = new ImageLoader(getRequestQueue(), mLruCacheManager.getLruImageCache());
-		}
-		return mImageLoader;
-	}
 
-	public LruCacheManager getLruCacheManager() {
-		return mLruCacheManager;
-	}
 	
 	private int getStatusBarHeight(){
 		try {

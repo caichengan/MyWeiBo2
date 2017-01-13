@@ -14,12 +14,7 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.widget.ImageView;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageRequest;
-import com.xht.android.myweibo.App;
 import com.xht.android.myweibo.R;
 
 import java.io.ByteArrayInputStream;
@@ -97,11 +92,14 @@ public class BitmapUtils {
 	}
 
 
-	/**
+/*
+	*/
+/**
 	 * 加载网络图片
 	 * @param imgFile
 	 * @param mImgFile
-     */
+     *//*
+
 	public static void loadImgageUrl(String imgFile, final ImageView mImgFile) {
 
 
@@ -109,10 +107,12 @@ public class BitmapUtils {
 
 			@Override
 			public void onResponse(Bitmap arg0) {
-			/*	ScaleAnimation scaleAnimation=new ScaleAnimation(0.3f, 1.0f ,0.3f, 1.0f);
+			*/
+/*	ScaleAnimation scaleAnimation=new ScaleAnimation(0.3f, 1.0f ,0.3f, 1.0f);
 				scaleAnimation.setRepeatMode(TRIM_MEMORY_COMPLETE);
 				scaleAnimation.setDuration(500);
-				mImgFile.startAnimation(scaleAnimation);*/
+				mImgFile.startAnimation(scaleAnimation);*//*
+
 				mImgFile.setImageBitmap(arg0);
 
 			}
@@ -127,6 +127,7 @@ public class BitmapUtils {
 		//存储到队列中
 		App.getInstance().getRequestQueue().add(request);
 	}
+*/
 
 
 

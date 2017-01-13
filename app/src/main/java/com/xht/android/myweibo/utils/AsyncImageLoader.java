@@ -12,7 +12,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.xht.android.myweibo.ceche.DiskLruCache;
+import com.jakewharton.disklrucache.DiskLruCache;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;

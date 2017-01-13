@@ -1,18 +1,18 @@
 package com.xht.android.myweibo.net;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.xht.android.myweibo.App;
-import com.xht.android.myweibo.utils.LogHelper;
+import com.sina.weibo.sdk.exception.WeiboException;
+import com.sina.weibo.sdk.net.AsyncWeiboRunner;
+import com.sina.weibo.sdk.net.RequestListener;
+import com.sina.weibo.sdk.net.WeiboParameters;
 
 import org.json.JSONObject;
 
 import java.util.LinkedHashMap;
 
-public class VolleyHelpApi extends BaseApi{
+public class VolleyHelpApi  {
 	private static final String TAG = "VolleyHelpApi";
-	
+
+	String httpMethod="GET";
 	private static VolleyHelpApi sVolleyHelpApi;
 	public static synchronized VolleyHelpApi getInstance() {
 		if (sVolleyHelpApi == null) {
@@ -21,44 +21,25 @@ public class VolleyHelpApi extends BaseApi{
 		return sVolleyHelpApi;
 	}
 	private VolleyHelpApi() {}
-	/**
-	 * 检查版本更新 getCheckVersion
-	 * @param apiListener 回调监听器
-	 */
-	public void getCheckVersion(final APIListener apiListener) {
-		String urlString = MakeURL(CHECK_VERSION_URL, new LinkedHashMap<String, Object>() {{
-		}});
-		JsonObjectRequest req = new JsonObjectRequest(urlString, null, new Response.Listener<JSONObject>() {
-			@Override
-			public void onResponse(JSONObject response) {
-				LogHelper.i(TAG,"-----------"+ response.toString());
-					JSONObject jsonObject = response.optJSONObject("entity");
-					apiListener.onResult(response);
 
-			}
-		}, new Response.ErrorListener() {
+	public void getDatasNews(AsyncWeiboRunner asyncWeiboRunner, WeiboParameters weiboParameters, final APIListener apiListener){
+		String urlString = BaseURL.DATAS_ORDER_URL;
+
+		asyncWeiboRunner.requestAsync(urlString, weiboParameters, httpMethod, new RequestListener() {
 			@Override
-			public void onErrorResponse(VolleyError error) {
-				int type = VolleyErrorHelper.getErrType(error);
-				switch (type) {
-					case 1:
-						LogHelper.i(TAG, "超时");
-						break;
-					case 2:
-						LogHelper.i(TAG, "服务器问题");
-						break;
-					case 3:
-						LogHelper.i(TAG, "网络问题");
-						break;
-					default:
-						LogHelper.i(TAG, "未知错误");
-				}
-				apiListener.onError("服务器繁忙，请稍后再试");
+			public void onComplete(String s) {
+
+				apiListener.onResult(s);
+			}
+
+			@Override
+			public void onWeiboException(WeiboException e) {
+
+				apiListener.onError(e.toString());
 			}
 		});
-		App.getInstance().addToRequestQueue(req, TAG);
-	}
 
+	}
 
 
 
@@ -89,46 +70,6 @@ public class VolleyHelpApi extends BaseApi{
 			return false;
 		}
 		return true;
-	}
-
-	/**
-	 * 保存修改的公司名字
-	 * @param jsonObject
-	 * @param apiListener
-     */
-	public void postSaveCompanyName(JSONObject jsonObject, final APIListener apiListener) {
-
-		JsonObjectRequest req = new JsonObjectRequest(SAVE_COPANY_URL, jsonObject, new Response.Listener<JSONObject>() {
-			@Override
-			public void onResponse(JSONObject response) {
-				LogHelper.i(TAG, response.toString());
-
-					apiListener.onResult(response);
-
-			}
-		}, new Response.ErrorListener() {
-
-			@Override
-			public void onErrorResponse(VolleyError error) {
-				int type = VolleyErrorHelper.getErrType(error);
-				switch (type) {
-					case 1:
-						LogHelper.i(TAG, "超时");
-						break;
-					case 2:
-						LogHelper.i(TAG, "服务器问题");
-						break;
-					case 3:
-						LogHelper.i(TAG, "网络问题");
-						break;
-					default:
-						LogHelper.i(TAG, "未知错误");
-				}
-				apiListener.onError("服务器繁忙，请稍后再试...");
-
-			}
-		});
-		App.getInstance().addToRequestQueue(req, TAG);
 	}
 
 

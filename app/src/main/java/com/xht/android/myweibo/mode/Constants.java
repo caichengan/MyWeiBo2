@@ -5,9 +5,24 @@ import android.os.Environment;
 public class Constants {
 
 
-	public static final String App_Key ="954912445";
-	public static final String App_Secret = "1ee30049b2dbc7eaf93b19d2a3daae72";
+	public static final String APP_KEY ="954912445";
+	public static final String App_Secret ="1ee30049b2dbc7eaf93b19d2a3daae72";//签名文件6cfe75ceacd84b0f185dafae505bf24c
+	public static final String REDIRECT_URL = "http://www.sina.com";// 应用的回调页
+	public static final String SCOPE = 							   // 应用申请的高级权限
+			"email,direct_messages_read,direct_messages_write,"
+					+ "friendships_groups_read,friendships_groups_write,statuses_to_me_read,"
+					+ "follow_app_official_microblog," + "invitation_write";
 	/*
+
+public interface Constants {
+    public static final String APP_KEY      = "2045436852";		   // 应用的APP_KEY
+    public static final String REDIRECT_URL = "http://www.sina.com";// 应用的回调页
+    public static final String SCOPE = 							   // 应用申请的高级权限
+            "email,direct_messages_read,direct_messages_write,"
+            + "friendships_groups_read,friendships_groups_write,statuses_to_me_read,"
+            + "follow_app_official_microblog," + "invitation_write";
+}
+
 
 	App Key：
 		954912445
