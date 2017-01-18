@@ -1,4 +1,4 @@
-package com.xht.android.myweibo;
+package com.xht.android.myweibo.activity;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -11,6 +11,7 @@ import android.support.v4.view.ViewPager;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import com.xht.android.myweibo.R;
 import com.xht.android.myweibo.fragment.MainFragment;
 import com.xht.android.myweibo.fragment.MessageFragment;
 import com.xht.android.myweibo.fragment.MyFragment;

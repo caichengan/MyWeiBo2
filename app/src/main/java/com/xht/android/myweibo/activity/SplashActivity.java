@@ -1,4 +1,4 @@
-package com.xht.android.myweibo;
+package com.xht.android.myweibo.activity;
 
 import android.app.Activity;
 import android.content.Context;
@@ -18,6 +18,7 @@ import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 import com.sina.weibo.sdk.auth.WeiboAuthListener;
 import com.sina.weibo.sdk.auth.sso.SsoHandler;
 import com.sina.weibo.sdk.exception.WeiboException;
+import com.xht.android.myweibo.R;
 import com.xht.android.myweibo.mode.Constants;
 import com.xht.android.myweibo.utils.IntentUtils;
 import com.xht.android.myweibo.utils.LogHelper;

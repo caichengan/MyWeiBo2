@@ -39,6 +39,7 @@ public class MessageFragment extends Fragment {
     private String mParam2;
     private ListView orderListView;
     private PullRefreshLayout swipeRefreshLayout;
+    private ListView lvMessage;
 
 
     public MessageFragment() {
@@ -85,6 +86,25 @@ public class MessageFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view= inflater.inflate(R.layout.fragment_message, container, false);
 
+        lvMessage = (ListView)view. findViewById(R.id.lvGetNews);
+
+
+
+        swipeRefreshLayout = (PullRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
+
+        swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                swipeRefreshLayout.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        // 刷新3秒完成
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                }, 3000);
+            }
+        });
 
         return view;
     }
