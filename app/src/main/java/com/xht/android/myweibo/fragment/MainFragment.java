@@ -56,8 +56,6 @@ public class MainFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
-
     private MainActivity mMainActivity;
     private ListView lvGetNews;
     private PullRefreshLayout swipeRefreshLayout;
@@ -113,14 +111,11 @@ public class MainFragment extends Fragment {
         View view= inflater.inflate(R.layout.fragment_main, container, false);
 
         lvGetNews = (ListView)view. findViewById(R.id.lvGetNews);
-
-
         mainFind = (TextView)view. findViewById(R.id.mainFind);
         mainName = (TextView)view. findViewById(R.id.mainName);
         mainSumbit = (ImageView)view. findViewById(R.id.mainSumbit);
 
         swipeRefreshLayout = (PullRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
-
         swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -134,8 +129,6 @@ public class MainFragment extends Fragment {
                 }, 3000);
             }
         });
-
-
 
         getNewsDatas();
         return view;
@@ -173,15 +166,12 @@ public class MainFragment extends Fragment {
                     String thumbnail_pic =  jsonObject.optString("thumbnail_pic");
                     String original_pic = jsonObject.optString("original_pic");
 
-
                     LogHelper.i(TAG,"------thumbnail_pic-------"+thumbnail_pic);
                     LogHelper.i(TAG,"--------original_pic-----"+original_pic);
-
                     itemPub.setCreated_at(created_at);
                     itemPub.setOriginal_pic(original_pic);
                     itemPub.setText(text);
                     itemPub.setThumbnail_pic(thumbnail_pic);
-
 
                     JSONArray pic_urls = (JSONArray) jsonObject.get("pic_urls");
                     List<String> mListPic=new ArrayList<String>();
@@ -196,7 +186,6 @@ public class MainFragment extends Fragment {
                    JSONObject objectUser= (JSONObject) jsonObject.get("user");
 
                     PublicLine.UserBean itemUser=new PublicLine.UserBean();
-
 
                     String id = objectUser.optString("id");
                     String idstr=objectUser.optString("idstr");
@@ -240,9 +229,7 @@ public class MainFragment extends Fragment {
 
                     itemUser.setAvatar_large(avatar_large);
                     itemUser.setAvatar_hd(avatar_hd);
-
                     itemPub.setmUser(itemUser);
-
                     mPublicList.add(itemPub);
 
                 }
@@ -271,9 +258,6 @@ public class MainFragment extends Fragment {
      * "hasvisible":false,"previous_cursor":0,"next_cursor":0,"total_number":20,"interval":0}
      *
      **/
-
-
-
               /*  JsonParser parser=new JsonParser();
                 JsonObject asJsonObject = parser.parse(json).getAsJsonObject();
                 JsonArray stArray = asJsonObject.get("statuses").getAsJsonArray();
@@ -282,7 +266,6 @@ public class MainFragment extends Fragment {
                 Type type=new TypeToken<ArrayList<PublicLine>>(){}.getType();
                 arrayList=new Gson().fromJson(stArray,type);
                 LogHelper.i(TAG,"------"+arrayList.size());*/
-
 /**
  *
  * {"statuses":[{"created_at":"Mon Jan 16 16:22:34 +0800 2017","id":4064580433542141,
@@ -295,16 +278,6 @@ public class MainFragment extends Fragment {
  *
  */
 
-
-
-
-
-
-
-
-
-
-
             }
 
             @Override
@@ -312,19 +285,11 @@ public class MainFragment extends Fragment {
                 LogHelper.i(TAG,"-----onError-----"+e.toString());
             }
         });
-
-
-
-
     }
-
     @Override
     public void onResume() {
         super.onResume();
 
-
     }
-
-
 }
 
