@@ -24,7 +24,7 @@ import com.xht.android.myweibo.R;
  * Use the {@link MessageFragment#newInstance} factory method to
  * create an instance of this fragment.
  * <br>
- *    我的客户中的订单信息
+ *    微博信息页面
  */
 public class MessageFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
@@ -32,7 +32,7 @@ public class MessageFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    private static final String TAG = "OrderFragment";
+    private static final String TAG = "MessageFragment";
 
     // TODO: Rename and change types of parameters
     private String mParam1;

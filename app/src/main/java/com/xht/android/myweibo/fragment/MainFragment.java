@@ -19,7 +19,7 @@ import com.xht.android.myweibo.mode.Constants;
 import com.xht.android.myweibo.mode.ListNewsAdapter;
 import com.xht.android.myweibo.mode.PublicLine;
 import com.xht.android.myweibo.net.APIListener;
-import com.xht.android.myweibo.net.VolleyHelpApi;
+import com.xht.android.myweibo.net.WeiBoHelper;
 import com.xht.android.myweibo.utils.LogHelper;
 import com.xht.android.myweibo.utils.SharpUtils;
 
@@ -43,7 +43,7 @@ import java.util.List;
  * Use the {@link MainFragment#newInstance} factory method to
  * create an instance of this fragment.
  * <br>
- *    我的客户中的订单信息
+ *    微博主页
  */
 public class MainFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
@@ -141,7 +141,7 @@ public class MainFragment extends Fragment {
         LogHelper.i(TAG,"-----onResult-----");
 
         weiboParameters.put(WBConstants.AUTH_ACCESS_TOKEN,sharpUtils.getToken().getToken());
-        VolleyHelpApi.getInstance().getDatasNews(asyncWeiboRunner, weiboParameters, new APIListener() {
+        WeiBoHelper.getInstance().getDatasNews(asyncWeiboRunner, weiboParameters, new APIListener() {
             @Override
             public void onResult(Object result) {
                 LogHelper.i(TAG,"-----onResult-----"+result.toString());
@@ -175,14 +175,15 @@ public class MainFragment extends Fragment {
 
                     JSONArray pic_urls = (JSONArray) jsonObject.get("pic_urls");
                     List<String> mListPic=new ArrayList<String>();
-                  /*  if (pic_urls.size()>0) {
+
+                    /*  if (pic_urls.size()>0) {
                         for (int j = 0; j < pic_urls.size(); j++) {
                             JSONObject obj = (JSONObject) pic_urls.get(i);
                             mListPic.add((String) obj.get("thumbnail_pic"));
                         }
                         itemPub.setPic_urls(mListPic);
                     }
-*/
+                */
                    JSONObject objectUser= (JSONObject) jsonObject.get("user");
 
                     PublicLine.UserBean itemUser=new PublicLine.UserBean();
