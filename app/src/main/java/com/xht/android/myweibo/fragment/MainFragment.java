@@ -10,6 +10,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.baoyz.widget.PullRefreshLayout;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.sina.weibo.sdk.constant.WBConstants;
 import com.sina.weibo.sdk.net.AsyncWeiboRunner;
 import com.sina.weibo.sdk.net.WeiboParameters;
@@ -19,13 +21,17 @@ import com.xht.android.myweibo.mode.Constants;
 import com.xht.android.myweibo.mode.ListNewsAdapter;
 import com.xht.android.myweibo.mode.PublicLine;
 import com.xht.android.myweibo.net.APIListener;
-import com.xht.android.myweibo.net.WeiBoHelper;
+import com.xht.android.myweibo.net.BaseNetWork;
+import com.xht.android.myweibo.net.BaseURL;
+import com.xht.android.myweibo.net.HttpResponse;
 import com.xht.android.myweibo.utils.LogHelper;
 import com.xht.android.myweibo.utils.SharpUtils;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -141,7 +147,36 @@ public class MainFragment extends Fragment {
         LogHelper.i(TAG,"-----onResult-----");
 
         weiboParameters.put(WBConstants.AUTH_ACCESS_TOKEN,sharpUtils.getToken().getToken());
-        WeiBoHelper.getInstance().getDatasNews(asyncWeiboRunner, weiboParameters, new APIListener() {
+        new BaseNetWork(getActivity(), BaseURL.PUBLIC_TIMELINE){
+            @Override
+            protected void onFinish(HttpResponse response, boolean success) {
+
+                if (success){
+                    List<PublicLine> mPublicList=new ArrayList<PublicLine>();
+                    Type type=new TypeToken<ArrayList<PublicLine>>(){}.getType();
+                    mPublicList=new Gson().fromJson(response.responer,type);
+
+                    LogHelper.i(TAG,"--------"+response.responer.toString());
+                    LogHelper.i(TAG,"---size-----"+mPublicList.size());
+
+                    LogHelper.i(TAG,"-----screen_name-----");
+                    listNewsAdapter = new ListNewsAdapter(getActivity(),mPublicList);
+                    lvGetNews.setAdapter(listNewsAdapter);
+
+                }else{
+                    LogHelper.i(TAG,"onFinish"+response.message);
+                }
+            }
+
+            @Override
+            public WeiboParameters onPararts() {
+                return null;
+            }
+        }.get();
+
+
+
+/*        WeiBoHelper.getInstance().getDatasNews(asyncWeiboRunner, weiboParameters, new APIListener() {
             @Override
             public void onResult(Object result) {
                 LogHelper.i(TAG,"-----onResult-----"+result.toString());
@@ -176,14 +211,14 @@ public class MainFragment extends Fragment {
                     JSONArray pic_urls = (JSONArray) jsonObject.get("pic_urls");
                     List<String> mListPic=new ArrayList<String>();
 
-                    /*  if (pic_urls.size()>0) {
+                    *//*  if (pic_urls.size()>0) {
                         for (int j = 0; j < pic_urls.size(); j++) {
                             JSONObject obj = (JSONObject) pic_urls.get(i);
                             mListPic.add((String) obj.get("thumbnail_pic"));
                         }
                         itemPub.setPic_urls(mListPic);
                     }
-                */
+                *//*
                    JSONObject objectUser= (JSONObject) jsonObject.get("user");
 
                     PublicLine.UserBean itemUser=new PublicLine.UserBean();
@@ -240,7 +275,7 @@ public class MainFragment extends Fragment {
                 lvGetNews.setAdapter(listNewsAdapter);
 
 
-   /**  * "user":{"id":1760539282,"idstr":"1760539282","class":1,"screen_name":"杭州与伦敦的距离","name":"杭州与伦敦的距离","
+   *//**  * "user":{"id":1760539282,"idstr":"1760539282","class":1,"screen_name":"杭州与伦敦的距离","name":"杭州与伦敦的距离","
      * province":"33","city":"1","location":"浙江 杭州","description":"","url":"",
      * "profile_image_url":"http://tva3.sinaimg.cn/crop.0.0.180.180.50/68efb292jw1e8qgp5bmzyj2050050aa8.jpg",
      * "profile_url":"u/1760539282","domain":"","weihao":"","gender":"f","followers_count":14,"friends_count":415,
@@ -258,16 +293,16 @@ public class MainFragment extends Fragment {
      * "darwin_tags":[],"hot_weibo_tags":[],"text_tag_tips":[],"userType":0,"positive_recom_flag":0,"gif_ids":"","is_show_bulletin":2}],
      * "hasvisible":false,"previous_cursor":0,"next_cursor":0,"total_number":20,"interval":0}
      *
-     **/
-              /*  JsonParser parser=new JsonParser();
+     **//*
+              *//*  JsonParser parser=new JsonParser();
                 JsonObject asJsonObject = parser.parse(json).getAsJsonObject();
                 JsonArray stArray = asJsonObject.get("statuses").getAsJsonArray();
 
                 List<PublicLine> arrayList=new ArrayList<PublicLine>();
                 Type type=new TypeToken<ArrayList<PublicLine>>(){}.getType();
                 arrayList=new Gson().fromJson(stArray,type);
-                LogHelper.i(TAG,"------"+arrayList.size());*/
-/**
+                LogHelper.i(TAG,"------"+arrayList.size());*//*
+*//**
  *
  * {"statuses":[{"created_at":"Mon Jan 16 16:22:34 +0800 2017","id":4064580433542141,
  * "text":"可能，或许真该减肥了 ​","textLength":20,
@@ -277,7 +312,7 @@ public class MainFragment extends Fragment {
  * "bmiddle_pic":"http://ww4.sinaimg.cn/bmiddle/68efb292gw1fbsjq55xh1j20c10euwf0.jpg",
  * "original_pic":"http://ww4.sinaimg.cn/large/68efb292gw1fbsjq55xh1j20c10euwf0.jpg",
  *
- */
+ *//*
 
             }
 
@@ -291,6 +326,7 @@ public class MainFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
+    }*/
     }
 }
 
