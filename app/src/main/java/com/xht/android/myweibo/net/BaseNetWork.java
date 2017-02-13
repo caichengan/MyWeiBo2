@@ -9,9 +9,6 @@ import com.sina.weibo.sdk.exception.WeiboException;
 import com.sina.weibo.sdk.net.AsyncWeiboRunner;
 import com.sina.weibo.sdk.net.RequestListener;
 import com.sina.weibo.sdk.net.WeiboParameters;
-import com.xht.android.myweibo.mode.Constants;
-
-import org.json.JSONObject;
 
 /**
  *
@@ -48,7 +45,7 @@ public abstract class BaseNetWork {
                     response.message=object.get("error").getAsString();
                 }
                 if (object.has("statuses")){
-                    response.responer=object.get("statuses").toString();
+                    response.responer=object.get("statuses").toString().trim();
                     success=true;
                 }else
                 if (object.has("users")){

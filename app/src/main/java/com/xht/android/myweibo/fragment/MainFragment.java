@@ -10,8 +10,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.baoyz.widget.PullRefreshLayout;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.sina.weibo.sdk.constant.WBConstants;
 import com.sina.weibo.sdk.net.AsyncWeiboRunner;
 import com.sina.weibo.sdk.net.WeiboParameters;
@@ -20,20 +18,21 @@ import com.xht.android.myweibo.activity.MainActivity;
 import com.xht.android.myweibo.mode.Constants;
 import com.xht.android.myweibo.mode.ListNewsAdapter;
 import com.xht.android.myweibo.mode.PublicLine;
-import com.xht.android.myweibo.net.APIListener;
 import com.xht.android.myweibo.net.BaseNetWork;
 import com.xht.android.myweibo.net.BaseURL;
 import com.xht.android.myweibo.net.HttpResponse;
 import com.xht.android.myweibo.utils.LogHelper;
 import com.xht.android.myweibo.utils.SharpUtils;
 
-
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Administrator on 2017/1/7.
@@ -68,10 +67,10 @@ public class MainFragment extends Fragment {
     private TextView mainFind;
     private TextView mainName;
     private ImageView mainSumbit;
-    private ListNewsAdapter listNewsAdapter;
     private AsyncWeiboRunner asyncWeiboRunner;
     private WeiboParameters weiboParameters;
     private SharpUtils sharpUtils;
+    private List<PublicLine> mPublicList;
 
     public MainFragment() {
         // Required empty public constructor
@@ -146,187 +145,130 @@ public class MainFragment extends Fragment {
     private void getNewsDatas() {
         LogHelper.i(TAG,"-----onResult-----");
 
-        weiboParameters.put(WBConstants.AUTH_ACCESS_TOKEN,sharpUtils.getToken().getToken());
+
         new BaseNetWork(getActivity(), BaseURL.PUBLIC_TIMELINE){
             @Override
             protected void onFinish(HttpResponse response, boolean success) {
 
                 if (success){
-                    List<PublicLine> mPublicList=new ArrayList<PublicLine>();
-                    Type type=new TypeToken<ArrayList<PublicLine>>(){}.getType();
-                    mPublicList=new Gson().fromJson(response.responer,type);
-
+                    mPublicList = new ArrayList<PublicLine>();
+                    /*Type type=new TypeToken<ArrayList<PublicLine>>(){}.getType();
+                    mPublicList =new Gson().fromJson(response.responer,type);
                     LogHelper.i(TAG,"--------"+response.responer.toString());
-                    LogHelper.i(TAG,"---size-----"+mPublicList.size());
-
+                    LogHelper.i(TAG,"---size-----"+ mPublicList.size());
+                    LogHelper.i(TAG,"---111---"+ mPublicList.get(1).getCreated_at());*/
                     LogHelper.i(TAG,"-----screen_name-----");
-                    listNewsAdapter = new ListNewsAdapter(getActivity(),mPublicList);
-                    lvGetNews.setAdapter(listNewsAdapter);
 
+
+
+                    try {
+                        JSONArray dataJson = new JSONArray(response.responer);
+                        int length = dataJson.length();
+                        for (int i = 0; i < length; i++) {
+                            PublicLine publicLine=new PublicLine();
+                            JSONObject item = (JSONObject) dataJson.get(i);
+
+                            publicLine.setCreated_at(item.optString("created_at"));
+                            publicLine.setId(item.optLong("id"));
+                            publicLine.setMid(item.optString("mid"));
+                            publicLine.setIdstr(item.optString("idstr"));
+                            publicLine.setText(item.optString("text"));
+                            publicLine.setSource(item.optString("source"));
+                            publicLine.setText(item.optString("text"));
+                            publicLine.setReposts_count(item.optInt("reposts_count"));
+                            publicLine.setComments_count(item.optInt("comments_count"));
+                            publicLine.setAttitudes_count(item.optInt("attitudes_count"));
+                            publicLine.setThumbnail_pic(item.optString("thumbnail_pic"));
+                            publicLine.setBmiddle_pic(item.optString("bmiddle_pic"));
+                            publicLine.setOriginal_pic(item.optString("original_pic"));
+                            publicLine.setPage_type(item.optInt("page_type"));
+                            PublicLine.UserBean userBean=new PublicLine.UserBean();
+
+                            JSONObject user = (JSONObject) item.get("user");
+                          /** user : {"id":3278115281,"idstr":"3278115281","class":1,"screen_name":"言身寸-林夕","name":"言身寸-林夕",
+                             "province":"32","city":"1000","location":"江苏","description":"2017目标实现当中。","url":"",
+                             "profile_image_url":"http://tva1.sinaimg.cn/crop.0.0.751.751.50/c36411d1jw8fcneb9i8ckj20kv0kv751.jpg",
+                             "cover_image_phone":"http://ww1.sinaimg.cn/crop.0.0.640.640.640/a1d3feabjw1ecat4uqw77j20hs0hsacp.jpg",
+                             "profile_url":"u/3278115281","domain":"","weihao":"","gender":"f","followers_count":68,"friends_count":251,
+                             "pagefriends_count":10,"statuses_count":864,"favourites_count":90,"created_at":"Thu May 09 06:45:25 +0800 2013",
+                           "following":false,"allow_all_act_msg":true,"geo_enabled":true,"verified":false,"verified_type":-1,"remark":"",
+                           "insecurity":{"sexual_content":false},"ptype":0,"allow_all_comment":false,
+                           "avatar_large":"http://tva1.sinaimg.cn/crop.0.0.751.751.180/c36411d1jw8fcneb9i8ckj20kv0kv751.jpg",
+                           "avatar_hd":"http://tva1.sinaimg.cn/crop.0.0.751.751.1024/c36411d1jw8fcneb9i8ckj20kv0kv751.jpg",
+                           "verified_reason":"","verified_trade":"","verified_reason_url":"","verified_source":"","verified_source_url":"",
+                           "follow_me":false,"online_status":0,"bi_followers_count":9,"lang":"zh-cn","star":0,"mbtype":0,
+                           "mbrank":0,"block_word":0,"block_app":0,"credit_score":80,"user_ability":1024,"urank":26}
+*/
+                            userBean.setId(user.optLong("id"));
+                            userBean.setIdstr(user.optString("idstr"));
+                            userBean.setScreen_name(user.optString("screen_name"));
+                            userBean.setName(user.optString("name"));
+                            userBean.setLocation(user.optString("location"));
+                            userBean.setDescription(user.optString("description"));
+                            userBean.setUrl(user.optString("url"));
+                            userBean.setProfile_image_url(user.optString("profile_image_url"));
+                            userBean.setProfile_url(user.optString("profile_url"));
+                            userBean.setCover_image_phone(user.optString("cover_image_phone"));
+                            userBean.setFollowers_count(user.optInt("followers_count"));
+                            userBean.setFriends_count(user.optInt("friends_count"));
+                            userBean.setPagefriends_count(user.optInt("pagefriends_count"));
+                            userBean.setStatuses_count(user.optInt("statuses_count"));
+                            userBean.setCreated_at(user.optString("created_at"));
+                            userBean.setRemark(user.optString("remark"));
+                            userBean.setFavourites_count(user.optInt("favourites_count"));
+                            userBean.setPagefriends_count(user.optInt("pagefriends_count"));
+                            userBean.setFollow_me(user.optBoolean("follow_me"));
+                            userBean.setBi_followers_count(user.optInt("bi_followers_count"));
+                            userBean.setAvatar_hd(user.optString("avatar_hd"));
+                            userBean.setAvatar_large(user.optString("avatar_large"));
+
+                            LogHelper.i(TAG,"-------user---"+user.toString());
+                            publicLine.setUser(userBean);
+                            mPublicList.add(publicLine);
+                        }
+                        LogHelper.i(TAG,"---111---"+dataJson.get(1));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    ListNewsAdapter listNewsAdapter = new ListNewsAdapter(getActivity(),mPublicList);
+                    lvGetNews.setAdapter(listNewsAdapter);
                 }else{
                     LogHelper.i(TAG,"onFinish"+response.message);
                 }
             }
-
             @Override
             public WeiboParameters onPararts() {
-                return null;
+                weiboParameters.put(WBConstants.AUTH_ACCESS_TOKEN,sharpUtils.getToken().getToken());
+                return weiboParameters;
             }
         }.get();
 
 
-
-/*        WeiBoHelper.getInstance().getDatasNews(asyncWeiboRunner, weiboParameters, new APIListener() {
-            @Override
-            public void onResult(Object result) {
-                LogHelper.i(TAG,"-----onResult-----"+result.toString());
-
-                String string=(String) result;
-
-                JSONObject object=JSONObject.fromObject(string);
-                LogHelper.i(TAG,"-----JSONObject-----"+object.toString());
-
-                JSONArray staArray = object.optJSONArray("statuses");
-                LogHelper.i(TAG,"-----statuses-----"+staArray.toString());
-                LogHelper.i(TAG,"-----statuses-----");
-
-                // java.lang.NoClassDefFoundError: Failed resolution of: Lorg/apache/commons/collections/map/ListOrderedMap;
-
-                List<PublicLine> mPublicList=new ArrayList<PublicLine>();
-                for (int i=0;i<staArray.size();i++){
-                    PublicLine itemPub=new PublicLine();
-                    JSONObject jsonObject= (JSONObject) staArray.get(i);
-                    String  created_at =  jsonObject.optString("created_at");
-                    String text = jsonObject.optString("text");
-                    String thumbnail_pic =  jsonObject.optString("thumbnail_pic");
-                    String original_pic = jsonObject.optString("original_pic");
-
-                    LogHelper.i(TAG,"------thumbnail_pic-------"+thumbnail_pic);
-                    LogHelper.i(TAG,"--------original_pic-----"+original_pic);
-                    itemPub.setCreated_at(created_at);
-                    itemPub.setOriginal_pic(original_pic);
-                    itemPub.setText(text);
-                    itemPub.setThumbnail_pic(thumbnail_pic);
-
-                    JSONArray pic_urls = (JSONArray) jsonObject.get("pic_urls");
-                    List<String> mListPic=new ArrayList<String>();
-
-                    *//*  if (pic_urls.size()>0) {
-                        for (int j = 0; j < pic_urls.size(); j++) {
-                            JSONObject obj = (JSONObject) pic_urls.get(i);
-                            mListPic.add((String) obj.get("thumbnail_pic"));
-                        }
-                        itemPub.setPic_urls(mListPic);
-                    }
-                *//*
-                   JSONObject objectUser= (JSONObject) jsonObject.get("user");
-
-                    PublicLine.UserBean itemUser=new PublicLine.UserBean();
-
-                    String id = objectUser.optString("id");
-                    String idstr=objectUser.optString("idstr");
-                    String screen_name =objectUser.optString("screen_name");
-                    String  name=objectUser.optString("name");
-                    String  province=objectUser.optString("province");
-                    String  location=objectUser.optString("location");
-                    String  url=objectUser.optString("url");
-                    String  profile_image_url =objectUser.optString("profile_image_url");
-                    String  profile_url =objectUser.optString("profile_url");
-                    String  followers_count =objectUser.optString("followers_count");
-                    String  friends_count=objectUser.optString("friends_count");
-                    String  pagefriends_count =objectUser.optString("pagefriends_count");
-                    String  statuses_count =objectUser.optString("statuses_count");
-                    String  favourites_count =objectUser.optString("favourites_count");
-                    String  createdTime =objectUser.optString("created_at");
-                    int  verified_type =objectUser.getInt("verified_type");
-                    Boolean  follow_me  = objectUser.getBoolean("follow_me");
-                    String  avatar_large  =objectUser.optString("avatar_large");
-                    String  avatar_hd =objectUser.optString("avatar_hd");
-
-                    LogHelper.i(TAG,"------profile_image_url-------"+profile_image_url);
-
-                    itemUser.setId(id);
-                    itemUser.setIdstr(idstr);
-                    itemUser.setScreen_name(screen_name);
-                    itemUser.setName(name);
-                    itemUser.setProvince(province);
-                    itemUser.setLocation(location);
-                    itemUser.setUrl(url);
-                    itemUser.setProfile_image_url(profile_image_url);
-                    itemUser.setProfile_url(profile_url);
-                    itemUser.setFollowers_count(followers_count);
-                    itemUser.setFriends_count(friends_count);
-                    itemUser.setPagefriends_count(pagefriends_count);
-                    itemUser.setStatuses_count(statuses_count);
-                    itemUser.setFavourites_count(favourites_count);
-                    itemUser.setCreatedTime(createdTime);
-                    itemUser.setVerified_type(verified_type);
-                    itemUser.setFollow_me(follow_me);
-
-                    itemUser.setAvatar_large(avatar_large);
-                    itemUser.setAvatar_hd(avatar_hd);
-                    itemPub.setmUser(itemUser);
-                    mPublicList.add(itemPub);
-
-                }
-
-                LogHelper.i(TAG,"-----screen_name-----");
-                listNewsAdapter = new ListNewsAdapter(getActivity(),mPublicList);
-                lvGetNews.setAdapter(listNewsAdapter);
-
-
-   *//**  * "user":{"id":1760539282,"idstr":"1760539282","class":1,"screen_name":"杭州与伦敦的距离","name":"杭州与伦敦的距离","
-     * province":"33","city":"1","location":"浙江 杭州","description":"","url":"",
-     * "profile_image_url":"http://tva3.sinaimg.cn/crop.0.0.180.180.50/68efb292jw1e8qgp5bmzyj2050050aa8.jpg",
-     * "profile_url":"u/1760539282","domain":"","weihao":"","gender":"f","followers_count":14,"friends_count":415,
-     * "pagefriends_count":0,"statuses_count":61,"favourites_count":0,"created_at":"Sat Jun 12 16:19:32 +0800 2010",
-     * "following":false,"allow_all_act_msg":true,"geo_enabled":true,"verified":false,"verified_type":-1,"remark":"",
-     * "insecurity":{"sexual_content":false},"ptype":0,"allow_all_comment":true,
-     * "avatar_large":"http://tva3.sinaimg.cn/crop.0.0.180.180.180/68efb292jw1e8qgp5bmzyj2050050aa8.jpg",
-     * "avatar_hd":"http://tva3.sinaimg.cn/crop.0.0.180.180.1024/68efb292jw1e8qgp5bmzyj2050050aa8.jpg",
-     * "verified_reason":"","verified_trade":"","verified_reason_url":"","verified_source":"",
-     * "verified_source_url":"","follow_me":false,"online_status":0,"bi_followers_count":0,
-     * "lang":"zh-cn","star":0,
-     * "user_ability":0,"urank":2}
-     * ,"reposts_count":0,"comments_count":0,"attitudes_count":0,
-     * "isLongText":false,"mlevel":0,"visible":{"type":0,"list_id":0},"biz_feature":0,"hasActionTypeCard":0,
-     * "darwin_tags":[],"hot_weibo_tags":[],"text_tag_tips":[],"userType":0,"positive_recom_flag":0,"gif_ids":"","is_show_bulletin":2}],
-     * "hasvisible":false,"previous_cursor":0,"next_cursor":0,"total_number":20,"interval":0}
-     *
-     **//*
-              *//*  JsonParser parser=new JsonParser();
-                JsonObject asJsonObject = parser.parse(json).getAsJsonObject();
-                JsonArray stArray = asJsonObject.get("statuses").getAsJsonArray();
-
-                List<PublicLine> arrayList=new ArrayList<PublicLine>();
-                Type type=new TypeToken<ArrayList<PublicLine>>(){}.getType();
-                arrayList=new Gson().fromJson(stArray,type);
-                LogHelper.i(TAG,"------"+arrayList.size());*//*
-*//**
- *
- * {"statuses":[{"created_at":"Mon Jan 16 16:22:34 +0800 2017","id":4064580433542141,
- * "text":"可能，或许真该减肥了 ​","textLength":20,
- "favorited":false,"truncated":false,
- * "pic_urls":[{"thumbnail_pic":"http://ww4.sinaimg.cn/thumbnail/68efb292gw1fbsjq55xh1j20c10euwf0.jpg"}],
- * "thumbnail_pic":"http://ww4.sinaimg.cn/thumbnail/68efb292gw1fbsjq55xh1j20c10euwf0.jpg",
- * "bmiddle_pic":"http://ww4.sinaimg.cn/bmiddle/68efb292gw1fbsjq55xh1j20c10euwf0.jpg",
- * "original_pic":"http://ww4.sinaimg.cn/large/68efb292gw1fbsjq55xh1j20c10euwf0.jpg",
- *
- *//*
-
-            }
-
-            @Override
-            public void onError(Object e) {
-                LogHelper.i(TAG,"-----onError-----"+e.toString());
-            }
-        });
     }
-    @Override
-    public void onResume() {
-        super.onResume();
 
-    }*/
+    public static Map<String, Object> getMap(String jsonString)
+    {
+        org.json.JSONObject jsonObject;
+        try
+        {
+            jsonObject = new org.json.JSONObject(jsonString); @SuppressWarnings("unchecked")
+        Iterator<String> keyIter = jsonObject.keys();
+            String key;
+            Object value;
+            Map<String, Object> valueMap = new HashMap<String, Object>();
+            while (keyIter.hasNext())
+            {
+                key = (String) keyIter.next();
+                value = jsonObject.get(key);
+                valueMap.put(key, value);
+            }
+            return valueMap;
+        }
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
 
