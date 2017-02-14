@@ -39,10 +39,6 @@ public class BitmapUtils {
 	 * 图片的绝对路径获取bitmap
 	 *
 	 */
-
-
-
-
 	/* File f = new File(filePath);
 	if (f.exists()) { //产生Bitmap对象，并放入mImageView中
 	Bitmap bm = BitmapFactory.decodeFile(filePath);

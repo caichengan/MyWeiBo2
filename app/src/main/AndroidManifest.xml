@@ -30,6 +30,9 @@
             android:exported="false" >
         </activity>
 
+        <activity android:name=".activity.UserActivity"
+            android:configChanges="keyboardHidden|orientation"/>
+
         <provider
             android:name=".provide.DatabaseHelpProvider"
             android:authorities="com.xht.android.myweibo.DatabaseHelpProvider"

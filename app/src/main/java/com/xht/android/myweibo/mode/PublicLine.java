@@ -33,7 +33,7 @@ public class PublicLine {
      * reposts_count : 0
      * comments_count : 0
      * attitudes_count : 0
-     * isLongText : false
+     * isLongText : false   retweeted_status
      * mlevel : 0
      * visible : {"type":0,"list_id":0}
      * biz_feature : 0
@@ -67,6 +67,8 @@ public class PublicLine {
     private String in_reply_to_status_id;
     private String in_reply_to_user_id;
     private String in_reply_to_screen_name;
+
+    private String retweeted_status;
     private Object geo;
     private UserBean user;
     private int reposts_count;
@@ -92,6 +94,14 @@ public class PublicLine {
     private List<?> hot_weibo_tags;
     private List<?> text_tag_tips;
     private List<Integer> biz_ids;
+
+    public String getRetweeted_status() {
+        return retweeted_status;
+    }
+
+    public void setRetweeted_status(String retweeted_status) {
+        this.retweeted_status = retweeted_status;
+    }
 
     public String getCreated_at() {
         return created_at;

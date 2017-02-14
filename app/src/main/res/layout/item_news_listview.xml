@@ -8,29 +8,42 @@
         android:id="@+id/linUser"
         android:layout_width="match_parent"
         android:background="@android:color/white"
-        android:layout_height="50dp">
+        android:layout_height="60dp">
         <ImageView
             android:id="@+id/newListHead"
             android:layout_alignParentLeft="true"
-            android:layout_width="40dp"
+            android:layout_width="50dp"
             android:src="@mipmap/ic_launcher"
-            android:padding="3dp"
+            android:layout_margin="5dp"
             android:layout_height="match_parent" />
 
         <TextView
             android:id="@+id/newListName"
             android:layout_toRightOf="@id/newListHead"
-            android:text=""
+            android:text="2222"
             android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
+            android:textSize="17sp"
+            android:textColor="@color/colorRed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <TextView
             android:id="@+id/newListTime"
             android:layout_below="@+id/newListName"
             android:layout_toRightOf="@id/newListHead"
-            android:text=""
+            android:text="111"
             android:layout_marginLeft="20dp"
+            android:layout_marginTop="5dp"
+            android:textSize="12dp"
+            android:textColor="@android:color/darker_gray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/newSources"
+            android:layout_below="@+id/newListName"
+            android:text=""
+            android:layout_toRightOf="@id/newListTime"
+            android:layout_marginLeft="30dp"
             android:layout_marginTop="5dp"
             android:textSize="12dp"
             android:layout_width="wrap_content"
@@ -48,17 +61,67 @@
 
         <TextView
             android:id="@+id/uresContent"
-            android:layout_margin="20dp"
+            android:layout_margin="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/linPic"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/imgPicture"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:src="@mipmap/ic_launcher"
+            android:layout_marginLeft="1dp"
+            android:layout_height="100dp" />
+        <ImageView
+            android:id="@+id/imgPicture1"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="1dp"
+            android:layout_height="100dp" />
+        <ImageView
+            android:id="@+id/imgPicture2"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="1dp"
+            android:layout_height="100dp" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/linTranspond"
+        android:orientation="vertical"
+        android:layout_margin="10dp"
+        android:visibility="gone"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/transpond"
+            android:layout_width="match_parent"
+            android:singleLine="true"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:background="@color/colorGray2"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_height="0.001dp">
+    </View>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="horizontal"
-        android:layout_margin="1dp"
+        android:layout_margin="11dp"
         android:layout_height="wrap_content">
 
 
@@ -77,7 +140,7 @@
                 android:layout_height="wrap_content" />
             <TextView
                 android:id="@+id/userReport"
-                android:text="2"
+                android:text=""
                 android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
@@ -88,8 +151,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:paddingTop="4dp"
-            android:layout_marginRight="1dp"
-            android:layout_marginLeft="1dp"
+            android:layout_marginLeft="2dp"
             android:background="@android:color/white"
             android:orientation="vertical"
             android:layout_height="40dp" >
@@ -100,7 +162,7 @@
                 android:layout_height="wrap_content" />
             <TextView
                 android:id="@+id/userCommit"
-                android:text="2"
+                android:text=""
                 android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
@@ -111,6 +173,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:paddingTop="4dp"
+            android:layout_marginLeft="2dp"
             android:background="@android:color/white"
             android:orientation="vertical"
             android:layout_height="40dp" >
@@ -121,7 +184,7 @@
                 android:layout_height="wrap_content" />
             <TextView
                 android:id="@+id/userAttidude"
-                android:text="2"
+                android:text=""
                 android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
@@ -130,5 +193,11 @@
 
 
     </LinearLayout>
+
+    
+    <View
+        android:layout_width="match_parent"
+        android:background="@color/colorGray2"
+        android:layout_height="10dp" />
 
 </LinearLayout>

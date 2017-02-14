@@ -6,9 +6,9 @@
     <color name="colorBlue">#FF0000FF</color>
     <color name="colorGray">#FF888888</color>
     <color name="colorGreen">#FF00FF00</color>
-    <color name="colorRed">#FFFF0000</color>
-    <color name="colorGray2">#FFCCCCCC</color>
+    <color name="colorRed">#ef3535</color>
+    <color name="colorGray2">#e7e9e3e3</color>
     <color name="normal_dark_green">#ff32c888</color>
     <color name="n_d_green">#ff007f8c</color>
-    <color name="jinhuang">#efc10b</color>
+    <color name="jinhuang">#047ff9</color>
 </resources>

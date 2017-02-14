@@ -40,12 +40,21 @@
         android:background="@android:color/white"
         android:layout_height="match_parent">
 
-
-        <ListView
-            android:id="@+id/lvGetNews"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rcycleView"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:scrollbars="none" >
-        </ListView>
+
+        </android.support.v7.widget.RecyclerView>
+
+
     </com.baoyz.widget.PullRefreshLayout>
+
+   <!-- <ListView
+        android:id="@+id/lvGetNews"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:scrollbars="none" >
+    </ListView>-->
 </LinearLayout>

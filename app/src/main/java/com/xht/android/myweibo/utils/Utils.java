@@ -18,8 +18,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 
 /**
@@ -223,17 +221,7 @@ public class Utils {
 		}
 	}
 	
-	public static String getTimeUtils(long now) {
-		/*DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-		//long now = System.currentTimeMillis();
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTimeInMillis(now);
-		return formatter.format(calendar.getTime());*/
-        SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        return sd.format(new Date(now));
 
-
-    }
 
 	/**
 	 * 采用md5加密算法，不可逆

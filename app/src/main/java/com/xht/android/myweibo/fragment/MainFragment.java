@@ -2,12 +2,15 @@ package com.xht.android.myweibo.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.baoyz.widget.PullRefreshLayout;
 import com.sina.weibo.sdk.constant.WBConstants;
@@ -16,8 +19,9 @@ import com.sina.weibo.sdk.net.WeiboParameters;
 import com.xht.android.myweibo.R;
 import com.xht.android.myweibo.activity.MainActivity;
 import com.xht.android.myweibo.mode.Constants;
-import com.xht.android.myweibo.mode.ListNewsAdapter;
+import com.xht.android.myweibo.mode.PicEntity;
 import com.xht.android.myweibo.mode.PublicLine;
+import com.xht.android.myweibo.mode.RecycleAdapter;
 import com.xht.android.myweibo.net.BaseNetWork;
 import com.xht.android.myweibo.net.BaseURL;
 import com.xht.android.myweibo.net.HttpResponse;
@@ -29,10 +33,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Administrator on 2017/1/7.
@@ -63,6 +64,7 @@ public class MainFragment extends Fragment {
     private String mParam2;
     private MainActivity mMainActivity;
     private ListView lvGetNews;
+    private RecyclerView rcycleView;
     private PullRefreshLayout swipeRefreshLayout;
     private TextView mainFind;
     private TextView mainName;
@@ -70,7 +72,10 @@ public class MainFragment extends Fragment {
     private AsyncWeiboRunner asyncWeiboRunner;
     private WeiboParameters weiboParameters;
     private SharpUtils sharpUtils;
-    private List<PublicLine> mPublicList;
+
+    private List<PublicLine> mLists;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private RecycleAdapter mRecycleAdapter;
 
     public MainFragment() {
         // Required empty public constructor
@@ -106,6 +111,9 @@ public class MainFragment extends Fragment {
         asyncWeiboRunner=new AsyncWeiboRunner(getActivity());
         weiboParameters=new WeiboParameters(Constants.APP_KEY);
 
+        mLists=new ArrayList<>();
+
+
         sharpUtils=SharpUtils.getInstance(getActivity());
         //获取数据
     }
@@ -115,10 +123,22 @@ public class MainFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view= inflater.inflate(R.layout.fragment_main, container, false);
 
-        lvGetNews = (ListView)view. findViewById(R.id.lvGetNews);
+        //lvGetNews = (ListView)view. findViewById(R.id.lvGetNews);
+        rcycleView = (RecyclerView) view. findViewById(R.id.rcycleView);
         mainFind = (TextView)view. findViewById(R.id.mainFind);
         mainName = (TextView)view. findViewById(R.id.mainName);
         mainSumbit = (ImageView)view. findViewById(R.id.mainSumbit);
+
+        mRecycleAdapter = new RecycleAdapter(getActivity(),mLists);
+        rcycleView.setAdapter(mRecycleAdapter);
+
+        mRecycleAdapter.setOnItemClickListener(new RecycleAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Toast.makeText(getActivity(), "position:"+position, Toast.LENGTH_SHORT).show();
+            }
+        });
+
 
         swipeRefreshLayout = (PullRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
@@ -135,8 +155,15 @@ public class MainFragment extends Fragment {
             }
         });
 
+        init();
         getNewsDatas();
         return view;
+    }
+
+    private void init(){
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        rcycleView.setLayoutManager(mLayoutManager);
+
     }
 
     /**
@@ -151,15 +178,13 @@ public class MainFragment extends Fragment {
             protected void onFinish(HttpResponse response, boolean success) {
 
                 if (success){
-                    mPublicList = new ArrayList<PublicLine>();
+                    List<PublicLine>   mPublicList = new ArrayList<PublicLine>();
                     /*Type type=new TypeToken<ArrayList<PublicLine>>(){}.getType();
                     mPublicList =new Gson().fromJson(response.responer,type);
                     LogHelper.i(TAG,"--------"+response.responer.toString());
                     LogHelper.i(TAG,"---size-----"+ mPublicList.size());
                     LogHelper.i(TAG,"---111---"+ mPublicList.get(1).getCreated_at());*/
                     LogHelper.i(TAG,"-----screen_name-----");
-
-
 
                     try {
                         JSONArray dataJson = new JSONArray(response.responer);
@@ -181,9 +206,28 @@ public class MainFragment extends Fragment {
                             publicLine.setThumbnail_pic(item.optString("thumbnail_pic"));
                             publicLine.setBmiddle_pic(item.optString("bmiddle_pic"));
                             publicLine.setOriginal_pic(item.optString("original_pic"));
+                            publicLine.setRetweeted_status(item.optString("retweeted_status"));
                             publicLine.setPage_type(item.optInt("page_type"));
-                            PublicLine.UserBean userBean=new PublicLine.UserBean();
 
+
+                            JSONArray picUrls = item.optJSONArray("pic_urls");
+                            List<PicEntity> picEntityList=new ArrayList<PicEntity>();
+                            for (int j = 0; j < picUrls.length(); j++) {
+                               JSONObject picJSON= (JSONObject) picUrls.get(j);
+
+                                PicEntity picItem=new PicEntity();
+                                String thumbnail_pic = picJSON.optString("thumbnail_pic");
+                                String bmiddle_pic = thumbnail_pic.replace("thumbnail", "bmiddle");
+                                String original_pic = bmiddle_pic.replace("thumbnail", "original");
+                                picItem.setThumbnail_pic(thumbnail_pic);
+                                picItem.setBmiddle_pic(bmiddle_pic);
+                                picItem.setOriginal_pic(original_pic);
+
+                                picEntityList.add(picItem);
+                            }
+                            publicLine.setPic_urls(picEntityList);
+
+                            PublicLine.UserBean userBean=new PublicLine.UserBean();
                             JSONObject user = (JSONObject) item.get("user");
                           /** user : {"id":3278115281,"idstr":"3278115281","class":1,"screen_name":"言身寸-林夕","name":"言身寸-林夕",
                              "province":"32","city":"1000","location":"江苏","description":"2017目标实现当中。","url":"",
@@ -230,8 +274,15 @@ public class MainFragment extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    ListNewsAdapter listNewsAdapter = new ListNewsAdapter(getActivity(),mPublicList);
-                    lvGetNews.setAdapter(listNewsAdapter);
+
+                   /* ListNewsAdapter listNewsAdapter = new ListNewsAdapter(getActivity(),mPublicList);
+                    lvGetNews.setAdapter(listNewsAdapter);*/
+
+                    if (mPublicList!=null&& mPublicList.size()>0){
+                        mLists.clear();
+                        mLists.addAll(mPublicList);
+                    }
+                    mRecycleAdapter.notifyDataSetChanged();
                 }else{
                     LogHelper.i(TAG,"onFinish"+response.message);
                 }
@@ -246,29 +297,6 @@ public class MainFragment extends Fragment {
 
     }
 
-    public static Map<String, Object> getMap(String jsonString)
-    {
-        org.json.JSONObject jsonObject;
-        try
-        {
-            jsonObject = new org.json.JSONObject(jsonString); @SuppressWarnings("unchecked")
-        Iterator<String> keyIter = jsonObject.keys();
-            String key;
-            Object value;
-            Map<String, Object> valueMap = new HashMap<String, Object>();
-            while (keyIter.hasNext())
-            {
-                key = (String) keyIter.next();
-                value = jsonObject.get(key);
-                valueMap.put(key, value);
-            }
-            return valueMap;
-        }
-        catch (JSONException e)
-        {
-            e.printStackTrace();
-        }
-        return null;
-    }
+
 }
 
