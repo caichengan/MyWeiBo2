@@ -37,11 +37,11 @@ public class RecycleAdapter extends RecyclerView.Adapter {
 
     private static final String TAG ="RecycleAdapter" ;
     private Context mContext;
-    private  List<PublicLine> mPublicList;
+    private  List<StatusEntity> mPublicList;
 
     private OnItemClickListener itemClickListener;
 
-    public RecycleAdapter(Context mContext, List<PublicLine> mPublicList) {
+    public RecycleAdapter(Context mContext, List<StatusEntity> mPublicList) {
         this.mContext=mContext;
         this.mPublicList=mPublicList;
     }
@@ -57,12 +57,37 @@ public class RecycleAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if(holder instanceof RecycleViewHolder){
             RecycleViewHolder rvHolder= (RecycleViewHolder) holder;
-            PublicLine publicLine = mPublicList.get(position);
+            StatusEntity publicLine = mPublicList.get(position);
 
             rvHolder.newListName.setText(publicLine.getUser().getScreen_name());
             rvHolder.newListTime.setText(TimeFormatUtils.parseYYMMDD(publicLine.getCreated_at()));
             rvHolder.uresContent.setText(publicLine.getText());
             rvHolder.newSources.setText(Html.fromHtml(publicLine.getSource()));
+
+
+
+            StatusEntity.RetweetedStatusBean retweetedStatus = mPublicList.get(position).getRetweeted_status();
+
+            if (retweetedStatus!=null){
+                rvHolder.linTranspond.setVisibility(View.VISIBLE);
+                rvHolder.transpond.setText(retweetedStatus.getText());
+
+
+                List<PicEntity> retweetedStatusPicUrls = (List<PicEntity>) retweetedStatus.getPic_urls();
+                if (retweetedStatusPicUrls!=null&& retweetedStatusPicUrls.size()>0) {
+                    String thumbnail_pic = retweetedStatusPicUrls.get(0).getThumbnail_pic();
+                    LogHelper.i(TAG,"----------retweetedStatusPicUrls--------"+thumbnail_pic);
+                    rvHolder.ChangePic.setVisibility(View.VISIBLE);
+                    Glide.with(mContext).load(thumbnail_pic).
+                            error(R.mipmap.ic_launcher).placeholder(R.mipmap.p_head_fail).into(rvHolder.imgChangePic);
+                }else {
+                    rvHolder.ChangePic.setVisibility(View.GONE);
+                }
+
+            }else{
+                rvHolder.linTranspond.setVisibility(View.GONE);
+                rvHolder.ChangePic.setVisibility(View.GONE);
+            }
 
 
             Glide.with(mContext).load(mPublicList.get(position).getUser().getProfile_image_url()).
@@ -76,13 +101,12 @@ public class RecycleAdapter extends RecyclerView.Adapter {
 
                 LogHelper.i(TAG,"------pic-----"+position+"------"+picEntity.getOriginal_pic());
                 LogHelper.i(TAG,"------pic-----");
-                Glide.with(mContext).load(picEntity.getOriginal_pic()).into(rvHolder.imgPicture);
+                Glide.with(mContext).load(picEntity.getOriginal_pic()).into(rvHolder.imgPicture).getRequest();
 
                /* if (size>1){
                     PicEntity picEntity1=picList.get(1);
                     rvHolder.imgPicture1.setVisibility(View.VISIBLE);
                     Glide.with(mContext).load(picEntity1.getOriginal_pic()).into(rvHolder.imgPicture1);
-
                     if (size>2){
                         PicEntity picEntity2=picList.get(2);
                         rvHolder.imgPicture2.setVisibility(View.VISIBLE);
@@ -90,14 +114,10 @@ public class RecycleAdapter extends RecyclerView.Adapter {
                     }else{
                         rvHolder.imgPicture2.setVisibility(View.INVISIBLE);
                     }
-
                 }else{
                     rvHolder.imgPicture1.setVisibility(View.INVISIBLE);
                 }
 */
-
-
-
             }else{
                 rvHolder.linPic.setVisibility(View.GONE);
             }
@@ -105,14 +125,9 @@ public class RecycleAdapter extends RecyclerView.Adapter {
 
 
 
-            if (publicLine.getRetweeted_status()!=null){
-                rvHolder.linTranspond.setVisibility(View.VISIBLE);
-                rvHolder.transpond.setText(publicLine.getRetweeted_status());
-            }else{
-                rvHolder.linTranspond.setVisibility(View.GONE);
-            }
+
             final Bundle bundle=new Bundle();
-            PublicLine.UserBean user = mPublicList.get(position).getUser();
+            StatusEntity.UserBean user = mPublicList.get(position).getUser();
 
             rvHolder.linUser.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -164,7 +179,11 @@ public class RecycleAdapter extends RecyclerView.Adapter {
         private ImageView imgPicture;
         private ImageView imgPicture1;
         private LinearLayout linPic;
+        private LinearLayout ChangePic;
         private ImageView imgPicture2;
+        private ImageView imgChangePic;
+        private ImageView imgChangePic1;
+        private ImageView imgChangePic2;
         private TextView newListName;
         private TextView newListTime;
         private RelativeLayout linUser;
@@ -185,8 +204,13 @@ public class RecycleAdapter extends RecyclerView.Adapter {
             newListHead = (ImageView) itemView.findViewById(R.id.newListHead);
             imgPicture = (ImageView) itemView.findViewById(R.id.imgPicture);
             imgPicture1 = (ImageView) itemView.findViewById(R.id.imgPicture1);
-            linPic = (LinearLayout) itemView.findViewById(R.id.linPic);
             imgPicture2 = (ImageView) itemView.findViewById(R.id.imgPicture2);
+            linPic = (LinearLayout) itemView.findViewById(R.id.linPic);
+            ChangePic = (LinearLayout) itemView.findViewById(R.id.ChangePic);
+            imgChangePic = (ImageView) itemView.findViewById(R.id.imgChangePic);
+            imgChangePic1 = (ImageView) itemView.findViewById(R.id.imgChangePic1);
+            imgChangePic2 = (ImageView) itemView.findViewById(R.id.imgChangePic2);
+
             newListName = (TextView) itemView.findViewById(R.id.newListName);
             newSources = (TextView) itemView.findViewById(R.id.newSources);
             newListTime = (TextView) itemView.findViewById(R.id.newListTime);

@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <RelativeLayout
         android:id="@+id/linUser"
@@ -71,6 +71,7 @@
         android:id="@+id/linPic"
         android:layout_width="match_parent"
         android:orientation="horizontal"
+        android:layout_margin="10dp"
         android:layout_height="wrap_content">
         <ImageView
             android:id="@+id/imgPicture"
@@ -97,8 +98,9 @@
     <LinearLayout
         android:id="@+id/linTranspond"
         android:orientation="vertical"
-        android:layout_margin="10dp"
-        android:visibility="gone"
+        android:padding="10dp"
+        android:background="@color/colorGray1"
+        android:visibility="visible"
 
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -106,8 +108,34 @@
         <TextView
             android:id="@+id/transpond"
             android:layout_width="match_parent"
-            android:singleLine="true"
             android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:id="@+id/ChangePic"
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_margin="10dp"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/imgChangePic"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:src="@mipmap/ic_launcher"
+                android:layout_marginLeft="1dp"
+                android:layout_height="100dp" />
+            <ImageView
+                android:id="@+id/imgChangePic1"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="1dp"
+                android:layout_height="100dp" />
+            <ImageView
+                android:id="@+id/imgChangePic2"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="1dp"
+                android:layout_height="100dp" />
+        </LinearLayout>
 
     </LinearLayout>
     <View
