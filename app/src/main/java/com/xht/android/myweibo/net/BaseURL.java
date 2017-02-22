@@ -3,7 +3,8 @@ package com.xht.android.myweibo.net;
 public class BaseURL {
 
     public static final String URLBASE="https://api.weibo.com/2/statuses/";
-
+    //https://api.weibo.com/2/users/show.json
+    public static final String URLUSER="https://api.weibo.com/2/users/";
 
     //获获取最新的公共微博
     public static final String PUBLIC_TIMELINE=URLBASE+"public_timeline.json";
@@ -13,6 +14,13 @@ public class BaseURL {
 
     //statuses/user_timeline 	获取用户发布的微博
     public static final String USER_TIMELINE=URLBASE+"user_timeline.json";
+
+
+    //users/show 	获取用户信息users/show
+    public static final String USER_FORMATION=URLUSER+"show.json";
+
+    //users/show 	获取某个用户最新发表的微博列表
+    public static final String OTHER_FORMATION=URLBASE+"user_timeline.json";
 
 
 }

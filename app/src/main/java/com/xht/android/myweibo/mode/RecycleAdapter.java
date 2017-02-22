@@ -3,6 +3,7 @@ package com.xht.android.myweibo.mode;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -37,13 +38,15 @@ public class RecycleAdapter extends RecyclerView.Adapter {
 
     private static final String TAG ="RecycleAdapter" ;
     private Context mContext;
-    private  List<StatusEntity> mPublicList;
+    private  List<StatusEntity.StatusesBean> mPublicList;
 
     private OnItemClickListener itemClickListener;
 
-    public RecycleAdapter(Context mContext, List<StatusEntity> mPublicList) {
-        this.mContext=mContext;
-        this.mPublicList=mPublicList;
+
+
+    public RecycleAdapter(FragmentActivity activity, List<StatusEntity.StatusesBean> mListStatuses) {
+        this.mContext=activity;
+        this.mPublicList=mListStatuses;
     }
 
     @Override
@@ -57,16 +60,16 @@ public class RecycleAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if(holder instanceof RecycleViewHolder){
             RecycleViewHolder rvHolder= (RecycleViewHolder) holder;
-            StatusEntity publicLine = mPublicList.get(position);
+            StatusEntity.StatusesBean publicLine = mPublicList.get(position);
 
             rvHolder.newListName.setText(publicLine.getUser().getScreen_name());
-            rvHolder.newListTime.setText(TimeFormatUtils.parseYYMMDD(publicLine.getCreated_at()));
+
             rvHolder.uresContent.setText(publicLine.getText());
             rvHolder.newSources.setText(Html.fromHtml(publicLine.getSource()));
+            rvHolder.newListTime.setText(TimeFormatUtils.parseYYMMDD(publicLine.getCreated_at()));
 
 
-
-            StatusEntity.RetweetedStatusBean retweetedStatus = mPublicList.get(position).getRetweeted_status();
+            StatusEntity.StatusesBean.RetweetedStatusBean retweetedStatus = mPublicList.get(position).getRetweeted_status();
 
             if (retweetedStatus!=null){
                 rvHolder.linTranspond.setVisibility(View.VISIBLE);
@@ -93,15 +96,14 @@ public class RecycleAdapter extends RecyclerView.Adapter {
             Glide.with(mContext).load(mPublicList.get(position).getUser().getProfile_image_url()).
                     transform(new CircleTransform(mContext)).error(R.mipmap.ic_launcher).placeholder(R.mipmap.p_head_fail).into(rvHolder.newListHead);
 
-            List<PicEntity> picList= (List<PicEntity>) mPublicList.get(position).getPic_urls();
+            List<StatusEntity.StatusesBean.PicUrlsBean> picList = mPublicList.get(position).getPic_urls();
             int size = picList.size();
             if (picList!=null&& size>0){
-                PicEntity picEntity=picList.get(0);
+                StatusEntity.StatusesBean.PicUrlsBean picEntity = picList.get(0);
                 rvHolder.imgPicture.setVisibility(View.VISIBLE);
-
-                LogHelper.i(TAG,"------pic-----"+position+"------"+picEntity.getOriginal_pic());
+                LogHelper.i(TAG,"------pic-----"+position+"------"+picEntity.getThumbnail_pic());
                 LogHelper.i(TAG,"------pic-----");
-                Glide.with(mContext).load(picEntity.getOriginal_pic()).into(rvHolder.imgPicture).getRequest();
+                Glide.with(mContext).load(picEntity.getThumbnail_pic()).into(rvHolder.imgPicture).getRequest();
 
                /* if (size>1){
                     PicEntity picEntity1=picList.get(1);
@@ -125,9 +127,8 @@ public class RecycleAdapter extends RecyclerView.Adapter {
 
 
 
-
             final Bundle bundle=new Bundle();
-            StatusEntity.UserBean user = mPublicList.get(position).getUser();
+            StatusEntity.StatusesBean.UserBean user = mPublicList.get(position).getUser();
 
             rvHolder.linUser.setOnClickListener(new View.OnClickListener() {
                 @Override

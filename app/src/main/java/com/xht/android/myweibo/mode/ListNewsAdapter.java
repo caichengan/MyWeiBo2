@@ -1,6 +1,8 @@
 package com.xht.android.myweibo.mode;
 
+import android.app.Activity;
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.Html;
 import android.text.Spanned;
@@ -11,8 +13,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.xht.android.myweibo.R;
+import com.xht.android.myweibo.activity.UserActivity;
+import com.xht.android.myweibo.utils.IntentUtils;
+import com.xht.android.myweibo.utils.LogHelper;
+import com.xht.android.myweibo.utils.TimeFormatUtils;
+import com.xht.android.myweibo.view.CircleTransform;
 
 import java.util.List;
 
@@ -26,16 +35,15 @@ import java.util.List;
 public class ListNewsAdapter extends BaseAdapter {
 
     private Context mContext;
-    private List<PublicLine>  mListDatas;
+    private List<StatusEntity.StatusesBean>   mListDatas;
     private static final String TAG = "ListNewsAdapter";
 
 
 
 
-    public ListNewsAdapter(FragmentActivity activity, List<PublicLine> mPublicList) {
-
+    public ListNewsAdapter(FragmentActivity activity, List<StatusEntity.StatusesBean> mListStatuses) {
         this.mContext=activity;
-        this.mListDatas=mPublicList;
+        this.mListDatas=mListStatuses;
     }
 
 
@@ -58,24 +66,39 @@ public class ListNewsAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         if (convertView==null){
             holder=new ViewHolder();
             convertView=View.inflate(mContext, R.layout.item_news_listview,null);
 
-            holder.newListHead = (ImageView) convertView.findViewById(R.id.newListHead);
-            holder.newListName = (TextView)convertView. findViewById(R.id.newListName);
-            holder. newListTime = (TextView)convertView. findViewById(R.id.newListTime);
-            holder. newListContent = (TextView)convertView. findViewById(R.id.uresContent);
-            holder. userReport = (TextView)convertView. findViewById(R.id.userReport);
-            holder. userCommit = (TextView)convertView. findViewById(R.id.userCommit);
-            holder. userAttidude = (TextView)convertView. findViewById(R.id.userAttidude);
-            holder. linUser = (RelativeLayout) convertView.findViewById(R.id.linUser);
+            holder. newListHead = (ImageView) convertView.findViewById(R.id.newListHead);
+            holder.newListName = (TextView) convertView.findViewById(R.id.newListName);
+            holder.newListTime = (TextView) convertView.findViewById(R.id.newListTime);
+            holder. newSources = (TextView) convertView.findViewById(R.id.newSources);
+            holder.uresContent = (TextView) convertView.findViewById(R.id.uresContent);
+            holder.imgPicture = (ImageView) convertView.findViewById(R.id.imgPicture);
+            holder. imgPicture1 = (ImageView) convertView.findViewById(R.id.imgPicture1);
+            holder. imgPicture2 = (ImageView) convertView.findViewById(R.id.imgPicture2);
+
+            holder.linPic = (LinearLayout) convertView.findViewById(R.id.linPic);
             holder.linContent = (LinearLayout) convertView.findViewById(R.id.linContent);
+            holder.transpond = (TextView) convertView.findViewById(R.id.transpond);//转发内容
+            holder.imgChangePic = (ImageView) convertView.findViewById(R.id.imgChangePic);//转发图片
+            holder. imgChangePic1 = (ImageView) convertView.findViewById(R.id.imgChangePic1);
+            holder.imgChangePic2 = (ImageView) convertView.findViewById(R.id.imgChangePic2);
+            holder.ChangePic = (LinearLayout) convertView.findViewById(R.id.ChangePic);
+            holder.linTranspond = (LinearLayout) convertView.findViewById(R.id.linTranspond);
+
+            holder. userReport = (TextView) convertView.findViewById(R.id.userReport);
             holder.linReport = (LinearLayout) convertView.findViewById(R.id.linReport);
+            holder.linUser = (RelativeLayout) convertView.findViewById(R.id.linUser);
+
+            holder.userCommit = (TextView) convertView.findViewById(R.id.userCommit);
             holder.linCommit = (LinearLayout) convertView.findViewById(R.id.linCommit);
-            holder.linAttidude = (LinearLayout) convertView.findViewById(R.id.linAttidude);
+
+            holder. userAttidude = (TextView) convertView.findViewById(R.id.userAttidude);
+            holder. linAttidude = (LinearLayout) convertView.findViewById(R.id.linAttidude);
 
            convertView.setTag(holder);
 
@@ -87,97 +110,139 @@ public class ListNewsAdapter extends BaseAdapter {
 
 
 
-        holder. linUser.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-        holder.linContent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-        holder. linReport.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-        holder. linCommit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-        holder. linAttidude.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
         int size = mListDatas.size();
-            PublicLine publicLine = mListDatas.get(position);
-            String created_at = publicLine.getCreated_at();//发微博的时间
-            String text = publicLine.getText();//微博的内容
-            String original_pic = publicLine.getOriginal_pic();
-            String thumbnail_pic = publicLine.getThumbnail_pic();
+        StatusEntity.StatusesBean publicLine = mListDatas.get(position);
+
+        holder.newListName.setText(publicLine.getUser().getScreen_name());
+        holder.uresContent.setText(publicLine.getText());
+        holder.newSources.setText(Html.fromHtml(publicLine.getSource()));
+        holder.newListTime.setText(TimeFormatUtils.parseYYMMDD(publicLine.getCreated_at()));
+
+       /* holder.newListTime.setText(TimeFormatUtils.parseYYMMDD(publicLine.getCreated_at()));
+        holder.uresContent.setText(publicLine.getText());
+        holder.newSources.setText(Html.fromHtml(publicLine.getSource()));*/
         //thumbnail_pic的地址配上该返回字段的图片ID，即可得到多个图片url。//TODO
 
         int reposts_count = publicLine.getReposts_count();//转发数
         int comments_count = publicLine.getComments_count();//评论数
         int attitudes_count = publicLine.getAttitudes_count();//表点赞
 
-        PublicLine.UserBean userBean = publicLine.getUser();
-        String name = userBean.getName();//用户昵称
-        String screen_name = userBean.getScreen_name();//友好显示名称
+        String bmiddle_pic = publicLine.getBmiddle_pic();
+
+
+
         String source = publicLine.getSource();
         Spanned spanned = Html.fromHtml(source);
-        holder.newListName.setText(name+"");
-        holder. newListTime.setText(created_at+"");
-        holder. newListContent.setText(text+spanned);
+
         holder. userReport.setText(reposts_count+"");
         holder. userCommit.setText(comments_count+"");
         holder. userAttidude .setText(attitudes_count+"");
 
-       /*  String text = statusesBean.getText();
-        int reposts_count = statusesBean.getReposts_count();
-        int comments_count = statusesBean.getComments_count();
-        int attitudes_count = statusesBean.getAttitudes_count();
-        String thumbnail_pic = statusesBean.getThumbnail_pic();
-        List<PublicLine.StatusesBean.PicUrlsBean> pic_urls = statusesBean.getPic_urls();
-        String avatar_large = user.getAvatar_large();//
+        Glide.with(mContext).load(mListDatas.get(position).getUser().getProfile_image_url()).
+                transform(new CircleTransform(mContext)).error(R.mipmap.ic_launcher).placeholder(R.mipmap.p_head_fail).into(holder.newListHead);
 
-        String createTime = user.getCreated_at();
-        String userName = user.getName();
-        String userUrl = user.getProfile_image_url();//用户头像地址
-        holder. userReport.setText(reposts_count+"");
-        holder. userCommit.setText(comments_count+"");
-        LogHelper.i(TAG,"-------userAttidude---"+userName+text+attitudes_count++);
-        holder.newListName.setText(userName+"");
-        holder. newListTime.setText(""+createTime);
-        holder. newListContent.setText(text+"");
-        holder. userAttidude.setText(attitudes_count+"");*/
+        List<?> pic_urls = mListDatas.get(position).getPic_urls();
 
+        LogHelper.i(TAG,"----------pic_urls.size()-------"+"-------"+ pic_urls.size());
+        if (pic_urls!=null&& pic_urls.size()>0) {
+
+            for (int i = 0; i < pic_urls.size(); i++) {
+
+
+                String pics= pic_urls.get(i).toString();
+
+                int index = pics.indexOf("=");
+
+                String substring = pics.substring(index+1, pics.length() - 1);
+
+                LogHelper.i(TAG,"----------sub-------"+"-------"+ substring);
+            }
+
+
+          /*  String picUrl = pic_urls.get(0).toString();
+            int index = picUrl.indexOf("=");
+            String[] split = picUrl.replace("{", "").replace("}", "").split("=");
+            LogHelper.i(TAG,"----------0--------"+position+"-------"+ split[0]);
+            LogHelper.i(TAG,"----------1--------"+position+"-------"+ split[1]);*/
+            holder.linPic.setVisibility(View.VISIBLE);
+
+            Glide.with(mContext)
+                    .load(bmiddle_pic)
+                    .placeholder(R.mipmap.p_head_fail)
+                    .crossFade()
+                    .into(holder.imgPicture);
+        }else {
+            holder.linPic.setVisibility(View.GONE);
+        }
+
+        StatusEntity.StatusesBean.RetweetedStatusBean retweetedStatus = mListDatas.get(position).getRetweeted_status();
+        if (retweetedStatus!=null){
+            holder.linTranspond.setVisibility(View.VISIBLE);
+            holder.transpond.setText(retweetedStatus.getText());
+            List<?> pic_urls_retweeted = retweetedStatus.getPic_urls();
+            if (pic_urls_retweeted!=null&& pic_urls_retweeted.size()>0) {
+                String thumbnail_pic = pic_urls_retweeted.get(0).toString();
+
+
+                int index = thumbnail_pic.indexOf("=");
+                String[] split = thumbnail_pic.replace("{", "").replace("}", "").split("=");
+
+                String thumbnailChange = thumbnail_pic.substring(index+1, thumbnail_pic.length() - 1);
+
+
+                LogHelper.i(TAG,"----------retweetedStatusPicUrls--------"+thumbnailChange);
+                holder.linTranspond.setVisibility(View.VISIBLE);
+                Glide.with(mContext).load(thumbnailChange).
+                        error(R.mipmap.ic_launcher).placeholder(R.mipmap.p_head_fail).into(holder.imgChangePic);
+            }else {
+                holder.linTranspond.setVisibility(View.GONE);
+            }
+
+        }else{
+            holder.linTranspond.setVisibility(View.GONE);
+        }
+
+        final Bundle bundle=new Bundle();
+        holder.newListHead.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //头像点击进入用户具体信息
+                Toast.makeText(mContext, "头像", Toast.LENGTH_SHORT).show();
+
+                bundle.putLong("uid",mListDatas.get(position).getUser().getId());
+
+
+                IntentUtils.startActivityNumber((Activity) mContext,bundle,UserActivity.class);
+
+            }
+        });
         return convertView;
     }
 
     class ViewHolder{
-        ImageView newListHead;
-        TextView newListName;
-        TextView newListTime;
-        TextView newListContent;
-        TextView userReport;
-        TextView userCommit;
-        TextView userAttidude ;
-
-        RelativeLayout linUser;
-        LinearLayout linContent;
-        LinearLayout linReport;
-        LinearLayout linCommit;
-        LinearLayout linAttidude;
+         ImageView newListHead;
+         TextView newListName;
+         TextView newListTime;
+         TextView newSources;
+         RelativeLayout linUser;
+         TextView uresContent;
+         LinearLayout linContent;
+         ImageView imgPicture;
+         ImageView imgPicture1;
+         ImageView imgPicture2;
+         LinearLayout linPic;
+         TextView transpond;//ChangePic 转发图片
+         ImageView imgChangePic;
+         ImageView imgChangePic1;
+         ImageView imgChangePic2;
+         LinearLayout ChangePic;
+         LinearLayout linTranspond;
+         TextView userReport;
+         LinearLayout linReport;
+         TextView userCommit;
+         LinearLayout linCommit;
+         TextView userAttidude;
+         LinearLayout linAttidude;
     }
 
 

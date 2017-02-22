@@ -40,21 +40,23 @@
         android:background="@android:color/white"
         android:layout_height="match_parent">
 
-        <android.support.v7.widget.RecyclerView
+        <ListView
+            android:id="@+id/rcycleView"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:clickable="true" >
+        </ListView>
+
+
+
+
+    </com.baoyz.widget.PullRefreshLayout>
+
+   <!-- <android.support.v7.widget.RecyclerView
             android:id="@+id/rcycleView"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:scrollbars="none" >
 
-        </android.support.v7.widget.RecyclerView>
-
-
-    </com.baoyz.widget.PullRefreshLayout>
-
-   <!-- <ListView
-        android:id="@+id/lvGetNews"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:scrollbars="none" >
-    </ListView>-->
+        </android.support.v7.widget.RecyclerView> -->
 </LinearLayout>
