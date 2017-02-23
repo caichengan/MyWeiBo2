@@ -53,7 +53,7 @@ public class MainActivity extends FragmentActivity {
 
 
     /**
-     * 四个切换的界面
+     * 三个切换的界面
      */
     private MainFragment mMainFragment;
     private MessageFragment mMessageFragment;

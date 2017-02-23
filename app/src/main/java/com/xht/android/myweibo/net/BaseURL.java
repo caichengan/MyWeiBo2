@@ -5,6 +5,11 @@ public class BaseURL {
     public static final String URLBASE="https://api.weibo.com/2/statuses/";
     //https://api.weibo.com/2/users/show.json
     public static final String URLUSER="https://api.weibo.com/2/users/";
+    //获取朋友信息
+    public static final String FRIENDS="https://api.weibo.com/2/friendships/";
+
+
+
 
     //获获取最新的公共微博
     public static final String PUBLIC_TIMELINE=URLBASE+"public_timeline.json";
@@ -21,6 +26,9 @@ public class BaseURL {
 
     //users/show 	获取某个用户最新发表的微博列表
     public static final String OTHER_FORMATION=URLBASE+"user_timeline.json";
+
+    //获取用户的关注列表
+    public static final String FRIENDS_FLLOW=FRIENDS+"friends.json";
 
 
 }

@@ -33,6 +33,9 @@
         <activity android:name=".activity.UserActivity"
             android:configChanges="keyboardHidden|orientation"/>
 
+        <activity android:name=".activity.UrlBlogActivity"
+            android:configChanges="keyboardHidden|orientation"/>
+
         <provider
             android:name=".provide.DatabaseHelpProvider"
             android:authorities="com.xht.android.myweibo.DatabaseHelpProvider"

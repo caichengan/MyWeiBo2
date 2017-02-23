@@ -4,6 +4,8 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by an on 2017/2/12.
+ *
+ * //用户信息
  */
 
 public class UserEntity {

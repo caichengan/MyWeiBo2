@@ -21,14 +21,7 @@
             android:textColor="@android:color/holo_red_light"
             android:layout_centerInParent="true"
             android:layout_height="wrap_content" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:text="设置"
-            android:textSize="14sp"
-            android:layout_alignParentRight="true"
-            android:gravity="center_vertical"
-            android:layout_marginRight="15dp"
-            android:layout_height="match_parent" />
+
 
     </RelativeLayout>
 
@@ -41,6 +34,7 @@
         android:background="@android:color/white"
         android:layout_height="60dp">
         <ImageView
+            android:id="@+id/myHead"
             android:layout_width="60dp"
             android:src="@mipmap/ic_launcher"
             android:padding="3dp"
@@ -76,6 +70,7 @@
                 android:src="@mipmap/my_switch"
                 android:layout_height="30dp" />
             <TextView
+                android:id="@+id/menber"
                 android:layout_width="wrap_content"
                 android:text="会员"
                 android:textSize="15sp"
@@ -91,13 +86,15 @@
         android:background="@android:color/white"
             android:layout_height="wrap_content">
         <LinearLayout
+            android:id="@+id/Myfollow"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical"
             android:layout_height="wrap_content" >
             <TextView
-                android:text="21"
+                android:id="@+id/myWeibo"
+                android:text=""
                 android:textSize="13dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -107,13 +104,15 @@
                 android:layout_height="wrap_content" />
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/MyFriends"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical"
             android:layout_height="wrap_content" >
             <TextView
-                android:text="21"
+                android:id="@+id/myFriends"
+                android:text=""
                 android:textSize="13dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -123,17 +122,20 @@
                 android:layout_height="wrap_content" />
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/MyFollowers"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical"
             android:layout_height="wrap_content" >
             <TextView
-                android:text="21"
+                android:id="@+id/myFollowers"
+                android:text=""
                 android:textSize="13dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
+
                 android:text="粉丝"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -142,6 +144,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/myBlogs"
         android:layout_width="match_parent"
         android:paddingLeft="21dp"
         android:layout_marginTop="10dp"
@@ -153,12 +156,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <TextView
-            android:text="新的好友"
+            android:text="我的博客"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/addNewFriends"
         android:layout_width="match_parent"
         android:paddingLeft="21dp"
         android:layout_marginTop="5dp"
@@ -175,7 +179,9 @@
             android:layout_height="wrap_content" />
     </LinearLayout>
 
+
     <LinearLayout
+        android:id="@+id/myTaoBao"
         android:layout_width="match_parent"
         android:paddingLeft="21dp"
         android:layout_marginTop="5dp"
@@ -187,8 +193,43 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <TextView
-            android:text="新的好友"
+            android:text="我的淘宝"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/myNews"
+        android:layout_width="match_parent"
+        android:paddingLeft="21dp"
+        android:layout_marginTop="5dp"
+        android:gravity="center_vertical"
+        android:background="@android:color/white"
+        android:layout_height="40dp" >
+        <ImageView
+            android:src="@mipmap/main_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:text="我的新闻"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/mySetting"
+        android:layout_width="match_parent"
+        android:paddingLeft="21dp"
+        android:layout_marginTop="5dp"
+        android:gravity="center_vertical"
+        android:background="@android:color/white"
+        android:layout_height="40dp" >
+        <ImageView
+            android:src="@mipmap/main_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:text="设置"
             android:layout_height="wrap_content" />
     </LinearLayout>
 </LinearLayout>

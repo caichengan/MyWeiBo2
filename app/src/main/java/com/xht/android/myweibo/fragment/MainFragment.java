@@ -18,16 +18,17 @@ import com.sina.weibo.sdk.net.AsyncWeiboRunner;
 import com.sina.weibo.sdk.net.WeiboParameters;
 import com.xht.android.myweibo.R;
 import com.xht.android.myweibo.activity.MainActivity;
+import com.xht.android.myweibo.activity.UrlBlogActivity;
 import com.xht.android.myweibo.mode.Constants;
 import com.xht.android.myweibo.mode.ListNewsAdapter;
 import com.xht.android.myweibo.mode.StatusEntity;
 import com.xht.android.myweibo.net.BaseNetWork;
 import com.xht.android.myweibo.net.BaseURL;
 import com.xht.android.myweibo.net.HttpResponse;
+import com.xht.android.myweibo.utils.IntentUtils;
 import com.xht.android.myweibo.utils.LogHelper;
 import com.xht.android.myweibo.utils.SharpUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -68,10 +69,11 @@ public class MainFragment extends Fragment {
     private WeiboParameters weiboParameters;
     private SharpUtils sharpUtils;
 
-    private List<StatusEntity.StatusesBean> mLists;
     private RecyclerView.LayoutManager mLayoutManager;
    // private RecycleAdapter mRecycleAdapter;
     private ListNewsAdapter mRecycleAdapter;
+    private List<StatusEntity.StatusesBean> mListStatuses;
+    private String subUrl;
 
     public MainFragment() {
         // Required empty public constructor
@@ -107,11 +109,16 @@ public class MainFragment extends Fragment {
         asyncWeiboRunner=new AsyncWeiboRunner(getActivity());
         weiboParameters=new WeiboParameters(Constants.APP_KEY);
 
-        mLists=new ArrayList<>();
 
 
         sharpUtils=SharpUtils.getInstance(getActivity());
         //获取数据
+        String uid = sharpUtils.getToken().getUid();
+        String token = sharpUtils.getToken().getToken();
+        String phoneNum = sharpUtils.getToken().getPhoneNum();
+        LogHelper.i(TAG,"------uid-"+uid+"----token-"+token.toString()+"----phoneNum-"+phoneNum+"------");
+
+
     }
 
     @Override
@@ -125,17 +132,6 @@ public class MainFragment extends Fragment {
         mainName = (TextView)view. findViewById(R.id.mainName);
         mainSumbit = (ImageView)view. findViewById(R.id.mainSumbit);
 
-
-
-
-
-      /*  mRecycleAdapter.setOnItemClickListener(new RecycleAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                Toast.makeText(getActivity(), "position:"+position, Toast.LENGTH_SHORT).show();
-            }
-        });*/
-
         rcycleView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -143,6 +139,19 @@ public class MainFragment extends Fragment {
               /*  String name = mLists.get(position)..getName();
                 String url = mLists.get(position).getUser().getUrl();
                 Toast.makeText(getActivity(), ""+name+"---url--"+url, Toast.LENGTH_SHORT).show();*/
+
+
+                Bundle bundle = new Bundle();
+                String text = mListStatuses.get(position).getText();
+                if (text.contains("http")) {
+                    int indexOf = text.lastIndexOf("http");
+                    subUrl = text.substring(indexOf, text.length() - 1);
+                    LogHelper.i(TAG, "------subUrl--" + subUrl);
+
+                    bundle.putString("URL",subUrl);
+                    IntentUtils.startActivityNumber(getActivity(), bundle, UrlBlogActivity.class);
+
+                }
 
 
             }
@@ -192,49 +201,12 @@ public class MainFragment extends Fragment {
                     LogHelper.i(TAG, "-----response-----"+response.responer.toString());
 
                     StatusEntity statusEntity = new Gson().fromJson(response.responer.toString(), StatusEntity.class);
-                    List<StatusEntity.StatusesBean> mListStatuses = statusEntity.getStatuses();
+                    mListStatuses = statusEntity.getStatuses();
 
 
-                    mRecycleAdapter = new ListNewsAdapter(getActivity(),mListStatuses);
+                    mRecycleAdapter = new ListNewsAdapter(getActivity(), mListStatuses);
                     rcycleView.setAdapter(mRecycleAdapter);
-                   /* try {
-                        JsonArray jsonArray=null;
-                        Gson gson=new Gson();
-                        JsonParser parser = new JsonParser();
-                        JsonElement element = parser.parse(response.responer);
-                        List<StatusEntity> mSatuslicList = new ArrayList<StatusEntity>();
-                        if (element.isJsonArray()){
-                            jsonArray=element.getAsJsonArray();
-                        }
-                        //遍历JsonArray对象
-                        Iterator it = jsonArray.iterator();
-                        while(it.hasNext()){
-                            JsonElement e = (JsonElement)it.next();
-                            //JsonElement转换为JavaBean对象
-                            StatusEntity statusEntity= gson.fromJson(e, StatusEntity.class);
-                            mSatuslicList.add(statusEntity);
-                        }
-                        if (mSatuslicList!=null&& mSatuslicList.size()>0){
-                            mLists.clear();
-                            mLists.addAll(mSatuslicList);
-                        }
-                        mRecycleAdapter.notifyDataSetChanged();
-                        LogHelper.i(TAG, "-----jsonArray-----"+mSatuslicList.size());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }*/
 
-
-
-
-                   /* ListNewsAdapter listNewsAdapter = new ListNewsAdapter(getActivity(),mSatuslicList);
-                    lvGetNews.setAdapter(listNewsAdapter);*/
-
-                   /* if (mSatuslicList!=null&& mSatuslicList.size()>0){
-                        mLists.clear();
-                        mLists.addAll(mSatuslicList);
-                    }
-                    mRecycleAdapter.notifyDataSetChanged();*/
                 }else{
                     LogHelper.i(TAG,"onFinish"+response.message);
                 }
@@ -249,6 +221,7 @@ public class MainFragment extends Fragment {
 
 
     }
+
 
 
 }

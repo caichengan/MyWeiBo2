@@ -1,6 +1,5 @@
 package com.xht.android.myweibo.mode;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -17,8 +16,6 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.xht.android.myweibo.R;
-import com.xht.android.myweibo.activity.UserActivity;
-import com.xht.android.myweibo.utils.IntentUtils;
 import com.xht.android.myweibo.utils.LogHelper;
 import com.xht.android.myweibo.utils.TimeFormatUtils;
 import com.xht.android.myweibo.view.CircleTransform;
@@ -114,7 +111,33 @@ public class ListNewsAdapter extends BaseAdapter {
         StatusEntity.StatusesBean publicLine = mListDatas.get(position);
 
         holder.newListName.setText(publicLine.getUser().getScreen_name());
-        holder.uresContent.setText(publicLine.getText());
+        //
+
+
+        //[a-zA-z]+://[^\s]*
+        String text = publicLine.getText();
+        holder.uresContent.setText(text);
+
+
+
+  /*      // 要验证的字符串
+        String str =publicLine.getText();
+        // 邮箱验证规则
+        String regEx = "^((http|https)://)?([\\w-]+\\.)+[\\w-]+(/[\\w -./?%&=]*)?$ ";
+        // 编译正则表达式
+        Pattern pattern = Pattern.compile(regEx);
+        // 忽略大小写的写法
+        // Pattern pat = Pattern.compile(regEx, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(str);
+        // 字符串是否与正则表达式相匹配
+        boolean rs = matcher.matches();
+        if (rs){
+        }
+        System.out.println(rs);*/
+
+
+
+
         holder.newSources.setText(Html.fromHtml(publicLine.getSource()));
         holder.newListTime.setText(TimeFormatUtils.parseYYMMDD(publicLine.getCreated_at()));
 
@@ -212,7 +235,7 @@ public class ListNewsAdapter extends BaseAdapter {
                 bundle.putLong("uid",mListDatas.get(position).getUser().getId());
 
 
-                IntentUtils.startActivityNumber((Activity) mContext,bundle,UserActivity.class);
+               // IntentUtils.startActivityNumber((Activity) mContext,bundle,UserActivity.class);
 
             }
         });
@@ -244,6 +267,7 @@ public class ListNewsAdapter extends BaseAdapter {
          TextView userAttidude;
          LinearLayout linAttidude;
     }
+
 
 
 }
