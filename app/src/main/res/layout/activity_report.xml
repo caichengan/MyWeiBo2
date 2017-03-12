@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@android:color/white"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_gravity="center_vertical"
+        android:layout_height="50dp">
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="取消"
+            android:layout_margin="8dp"
+            android:textSize="14sp"
+            android:background="@android:color/white"
+            android:layout_height="wrap_content" />
+        <LinearLayout
+            android:id="@+id/name"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:orientation="vertical"
+            android:layout_height="50dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:text="转发微博"
+                android:textColor="@android:color/black"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/reportName"
+                android:textColor="@android:color/black"
+                android:layout_width="wrap_content"
+                android:text="破天之安"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+        <Button
+            android:id="@+id/btnReport"
+            android:layout_toRightOf="@id/name"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="发布"
+            android:textSize="14dp"
+            android:layout_margin="5dp"
+            android:textColor="@android:color/black"
+            android:background="@drawable/btn_backgroup"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@android:color/darker_gray"
+        android:layout_height="0.001dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/edReportEdit"
+            android:layout_width="match_parent"
+            android:text=""
+            android:hint="说说分享心得..."
+            android:textSize="15sp"
+            android:padding="10dp"
+            android:layout_height="100dp" />
+
+        <TextView
+            android:id="@+id/mReportText"
+            android:text="具体信息"
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:visibility="gone"
+            android:id="@+id/reportImg"
+            android:layout_margin="10dp"
+            android:layout_width="150dp"
+            android:layout_height="150dp" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:gravity="center_horizontal"
+        android:layout_height="40dp">
+
+    </RelativeLayout>
+</LinearLayout>

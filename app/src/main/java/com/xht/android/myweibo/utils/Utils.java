@@ -2,6 +2,14 @@ package com.xht.android.myweibo.utils;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.ImageSpan;
+
+import com.xht.android.myweibo.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,6 +26,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -27,6 +40,9 @@ import java.security.NoSuchAlgorithmException;
  */
 public class Utils {
 	private static final String TAG = "Utils";
+	private static final  String START="start";
+	private static final  String END="end";
+	private static  SpannableString spannedString;
 	
 	/**
 	 * 创建一个目录
@@ -248,5 +264,72 @@ public class Utils {
 			return "";
 		}
 	}
+
+	/**
+	 * 高亮显示
+	 * @param spannedString
+	 * @param str
+	 * @param pattern
+     */
+	public static void HightLignt(SpannableString spannedString,String str,Pattern pattern){
+
+		List<HashMap<String,String>> list=getStartAndEnd(str,pattern);
+		for (HashMap<String,String> map:list){
+
+			/**
+			 * 文本高亮显示 TODO
+			 */
+			ForegroundColorSpan foregroundColorSpan=new ForegroundColorSpan(Color.BLUE);
+			spannedString.setSpan(foregroundColorSpan,Integer.parseInt(map.get(START)),
+					Integer.parseInt(map.get(END)), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+		}
+	}
+
+
+	/**
+			* 高亮显示
+	* @param spannedString
+	* @param str
+	* @param pattern
+	*/
+	public static void phrase(Context mContext,SpannableString spannedString,String str,Pattern pattern){
+
+		List<HashMap<String,String>> list=getStartAndEnd(str,pattern);
+		for (HashMap<String,String> map:list){
+
+			/**
+			 * 文本中添加图片 TODO
+			 */
+			Drawable drawable=mContext.getResources().getDrawable(R.mipmap.main_switch);
+			ImageSpan imageSpan=new ImageSpan(drawable);
+			drawable.setBounds(0,0,drawable.getIntrinsicWidth(),drawable.getIntrinsicHeight());
+			spannedString.setSpan(imageSpan,Integer.parseInt(START),Integer.parseInt(END),Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		}
+	}
+
+	/**
+	 *  匹配正则表达式， 获取头跟尾
+	 * @param str    字符串
+	 * @param pattern 正则表达式
+	 * @return
+	 */
+	public static List<HashMap<String,String>> getStartAndEnd(String str,Pattern pattern){
+
+		List<HashMap<String,String>> list=new ArrayList<>();
+
+		Matcher matcher=pattern.matcher(str);
+		while (matcher.find())  {
+
+			HashMap<String, String> map = new HashMap<String, String>();
+			map.put("pharse",matcher.group()+"");
+			map.put(START,matcher.start()+"");
+			map.put(END,matcher.end()+"");
+
+			list.add(map);
+		}
+
+		return list;
+	}
+
 
 }

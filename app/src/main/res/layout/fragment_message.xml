@@ -37,11 +37,20 @@
         android:background="@android:color/white"
         android:layout_height="match_parent">
 
-        <ListView
+
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="match_parent"
+            android:text="#我们活动是否会很方便和计划#到货入库加班费和解放军erfh,@shsf的，所代表的是比较好，http://.conhu.vijn"
+            android:gravity="center"
+        android:textSize="18sp"
+            android:layout_height="match_parent" />
+
+        <!--<ListView
             android:id="@+id/lvGetNews"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:scrollbars="none" >
-        </ListView>
+        </ListView>-->
     </com.baoyz.widget.PullRefreshLayout>
 </LinearLayout>

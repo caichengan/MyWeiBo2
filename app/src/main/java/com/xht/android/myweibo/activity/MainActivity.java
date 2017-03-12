@@ -21,8 +21,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
-
+/**
+ * 微博主页面
+ */
 public class MainActivity extends FragmentActivity {
 
 
@@ -85,27 +86,6 @@ public class MainActivity extends FragmentActivity {
 
         setContentView(R.layout.activity_main);
 
-     /*   TextView mCustomView = new TextView(this);
-        mCustomView.setText("微博");
-        mCustomView.setTextColor(Color.RED);
-        mCustomView.setTextSize(20);
-        final ActionBar aBar = getActionBar();
-        aBar.setCustomView(mCustomView,
-                new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        ActionBar.LayoutParams lp = (ActionBar.LayoutParams) mCustomView.getLayoutParams();
-        lp.gravity = lp.gravity & ~Gravity.RELATIVE_HORIZONTAL_GRAVITY_MASK | Gravity.CENTER_HORIZONTAL;
-        aBar.setCustomView(mCustomView, lp);
-        int change = ActionBar.DISPLAY_SHOW_CUSTOM;
-        aBar.setDisplayOptions(change);
-*/
-
-
-
-   /*     //获取数据
-        IntentFilter intentFilter = new IntentFilter(BRO_ACT_S);
-        registerReceiver(mReceiver, intentFilter);*/
-
-
             mRadioGroup = (RadioGroup) findViewById(R.id.menu_Switch);
             mRadioButton1 = (RadioButton) findViewById(R.id.radio_first);
             mRadioButton2 = (RadioButton) findViewById(R.id.radio_txl);
@@ -119,12 +99,10 @@ public class MainActivity extends FragmentActivity {
             mFragments.add(mMessageFragment);
             mFragments.add(mMyFragment);
 
-
             mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 
                 @Override
                 public void onCheckedChanged(RadioGroup group, int checkedId) {
-
                     switch (checkedId) {
                         case R.id.radio_first:
 
@@ -138,7 +116,6 @@ public class MainActivity extends FragmentActivity {
                                 mViewPager.setCurrentItem(1);
                                 currentSelect = 1;
                             }
-
                             break;
                         case R.id.radio_my:
 
@@ -154,7 +131,6 @@ public class MainActivity extends FragmentActivity {
                 }
             });
 
-
             mViewPager = (ViewPager) findViewById(R.id.contain1);
             adapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
                 @Override
@@ -169,38 +145,23 @@ public class MainActivity extends FragmentActivity {
             };
 
             mViewPager.setAdapter(adapter);
-
-
             mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-
                 @Override
                 public void onPageSelected(int arg0) {
-
                     mViewPager.setCurrentItem(arg0);
                     if (currentSelect != arg0) {
-
                         mRadioGroup.check(tabIds[arg0]);
                         currentSelect = arg0;
                     }
-
                 }
-
                 @Override
                 public void onPageScrolled(int arg0, float arg1, int arg2) {
                     // TODO Auto-generated method stub
-
                 }
-
                 @Override
                 public void onPageScrollStateChanged(int arg0) {
-
                 }
             });
         }
-
-
-
-
-
 
 }

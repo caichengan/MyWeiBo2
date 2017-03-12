@@ -5,4 +5,6 @@ package com.xht.android.myweibo.mode;
  */
 
 public class CommentEntity {
+
+
 }

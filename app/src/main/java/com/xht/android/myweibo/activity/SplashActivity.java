@@ -50,25 +50,28 @@ public class SplashActivity extends Activity {
         mAuthInfo=new AuthInfo(SplashActivity.this, Constants.APP_KEY,Constants.REDIRECT_URL,Constants.SCOPE);
         ssoHandler=new SsoHandler(SplashActivity.this,mAuthInfo);
 
-        AnimationSet set=new AnimationSet(false);
+        //AnimationSet set=new AnimationSet(false);
 
         ScaleAnimation scaleAnimation=new ScaleAnimation(0.5f, 1.0f ,0.5f, 1.0f);
         scaleAnimation.setRepeatMode(TRIM_MEMORY_BACKGROUND);
         scaleAnimation.setDuration(3000);
 
-        RotateAnimation rotateAnimation = new RotateAnimation(0f, 360f,
+        /*RotateAnimation rotateAnimation = new RotateAnimation(0f, 360f,
                 Animation.RELATIVE_TO_SELF, 0.5f,
                 Animation.RELATIVE_TO_SELF, 0.5f);
         rotateAnimation.setDuration(3000);
 
         AlphaAnimation alphaAnimation = new AlphaAnimation(0, 1.0f);
-        alphaAnimation.setDuration(3000);
+        alphaAnimation.setDuration(3000);*/
 
-        set.addAnimation(scaleAnimation);
+      /*  set.addAnimation(scaleAnimation);
         set.addAnimation(rotateAnimation);
         set.addAnimation(alphaAnimation);
-        splashImg.startAnimation(set);
-        set.setAnimationListener(new Animation.AnimationListener() {
+        splashImg.startAnimation(set);*/
+
+        splashImg.setAnimation(scaleAnimation);
+
+       scaleAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
             }

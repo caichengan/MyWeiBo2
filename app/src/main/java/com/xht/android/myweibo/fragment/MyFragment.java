@@ -22,6 +22,8 @@ import com.xht.android.myweibo.mode.UserEntity;
 import com.xht.android.myweibo.net.BaseNetWork;
 import com.xht.android.myweibo.net.BaseURL;
 import com.xht.android.myweibo.net.HttpResponse;
+import com.xht.android.myweibo.net.INetListener;
+import com.xht.android.myweibo.net.NetWorkHelper;
 import com.xht.android.myweibo.utils.LogHelper;
 import com.xht.android.myweibo.utils.SharpUtils;
 
@@ -109,48 +111,42 @@ public class MyFragment extends Fragment {
         sharpUtils=SharpUtils.getInstance(getActivity());
         weiboParameters=new WeiboParameters(Constants.APP_KEY);
     }
-    private void getUserDatas() {
-        new BaseNetWork(getActivity(), BaseURL.USER_FORMATION){
+    public void getUserDatas(){
+        NetWorkHelper.getInstance(getActivity()).getUserDatas(new INetListener() {
             @Override
-            protected void onFinish(HttpResponse response, boolean success) {
-                if (success) {
-                    LogHelper.i(TAG,"--------onFinish"+response.responer.toString());
-                    //{"id":3736157741,"idstr":"3736157741","class":1,"screen_name":"破荒之安","name":"破荒之安","province":"100","city":"1000","location":"其他",
-                    // "description":"","url":"","profile_image_url":"http://tva1.sinaimg.cn/crop.256.0.768.768.50/deb13e2djw8e9gwo0vgn7j20zk0lcjui.jpg","cover_image_phone":"http://ww1.sinaimg.cn/crop.0.0.640.640.640/549d0121tw1egm1kjly3jj20hs0hsq4f.jpg","profile_url":"u/3736157741","domain":"","weihao":"","gender":"m",
-                    // "followers_count":21,"friends_count":129,"pagefriends_count":1,"statuses_count":33,"favourites_count":1,"created_at":"Thu Aug 22 17:14:19 +0800 2013","following":false,"allow_all_act_msg":false,"geo_enabled":true,"verified":false,"verified_type":-1,"remark":"","insecurity":{"sexual_content":false},"status":{"created_at":"Sun Jan 22 20:34:26 +0800 2017","id":4066818144367095,"mid":"4066818144367095","idstr":"4066818144367095","text":"发送一条纯文字微博","textLength":18,"source_allowclick":1,"source_type":1,"source":"<a href=\"http://app.weibo.com/t/feed/3imOna\" rel=\"nofollow\">SDK微博应用demo</a>","favorited":false,"truncated":false,"in_reply_to_status_id":"","in_reply_to_user_id":"","in_reply_to_screen_name":"","pic_urls":[],"geo":null,"annotations":[{"sdk_request":true}],"reposts_count":0,"comments_count":0,"attitudes_count":0,"isLongText":false,"mlevel":0,"visible":{"type":0,"list_id":0},"biz_feature":0,"hasActionTypeCard":0,"darwin_tags":[],"hot_weibo_tags":[],"text_tag_tips":[],"userType":0,"positive_recom_flag":0,"gif_ids":"","is_show_bulletin":2},"ptype":0,"allow_all_comment":true,"avatar_large":"http://tva1.sinaimg.cn/crop.256.0.768.768.180/deb13e2djw8e9gwo0vgn7j20zk0lcjui.jpg","avatar_hd":"http://tva1.sinaimg.cn/crop.256.0.768.768.1024/deb13e2djw8e9gwo0vgn7j20zk0lcjui.jpg","verified_reason":"","verified_trade":"","verified_reason_url":"","verified_source":"","verified_source_url":"","follow_me":false,"online_status":0,
-                    // "bi_followers_count":9,"lang":"zh-cn","star":0,"mbtype":0,"mbrank":0,"block_word":0,"block_app":0,"credit_score":80,"user_ability":1024,"urank":9}
-                    userEntity = new Gson().fromJson(response.responer.toString(), UserEntity.class);
-                    if (userEntity!=null){
+            public void onSuccess(String result) {
+                LogHelper.i(TAG, "--------onFinish" + result.toString());
+                //{"id":3736157741,"idstr":"3736157741","class":1,"screen_name":"破荒之安","name":"破荒之安","province":"100","city":"1000","location":"其他",
+                // "description":"","url":"","profile_image_url":"http://tva1.sinaimg.cn/crop.256.0.768.768.50/deb13e2djw8e9gwo0vgn7j20zk0lcjui.jpg","cover_image_phone":"http://ww1.sinaimg.cn/crop.0.0.640.640.640/549d0121tw1egm1kjly3jj20hs0hsq4f.jpg","profile_url":"u/3736157741","domain":"","weihao":"","gender":"m",
+                // "followers_count":21,"friends_count":129,"pagefriends_count":1,"statuses_count":33,"favourites_count":1,"created_at":"Thu Aug 22 17:14:19 +0800 2013","following":false,"allow_all_act_msg":false,"geo_enabled":true,"verified":false,"verified_type":-1,"remark":"","insecurity":{"sexual_content":false},"status":{"created_at":"Sun Jan 22 20:34:26 +0800 2017","id":4066818144367095,"mid":"4066818144367095","idstr":"4066818144367095","text":"发送一条纯文字微博","textLength":18,"source_allowclick":1,"source_type":1,"source":"<a href=\"http://app.weibo.com/t/feed/3imOna\" rel=\"nofollow\">SDK微博应用demo</a>","favorited":false,"truncated":false,"in_reply_to_status_id":"","in_reply_to_user_id":"","in_reply_to_screen_name":"","pic_urls":[],"geo":null,"annotations":[{"sdk_request":true}],"reposts_count":0,"comments_count":0,"attitudes_count":0,"isLongText":false,"mlevel":0,"visible":{"type":0,"list_id":0},"biz_feature":0,"hasActionTypeCard":0,"darwin_tags":[],"hot_weibo_tags":[],"text_tag_tips":[],"userType":0,"positive_recom_flag":0,"gif_ids":"","is_show_bulletin":2},"ptype":0,"allow_all_comment":true,"avatar_large":"http://tva1.sinaimg.cn/crop.256.0.768.768.180/deb13e2djw8e9gwo0vgn7j20zk0lcjui.jpg","avatar_hd":"http://tva1.sinaimg.cn/crop.256.0.768.768.1024/deb13e2djw8e9gwo0vgn7j20zk0lcjui.jpg","verified_reason":"","verified_trade":"","verified_reason_url":"","verified_source":"","verified_source_url":"","follow_me":false,"online_status":0,
+                // "bi_followers_count":9,"lang":"zh-cn","star":0,"mbtype":0,"mbrank":0,"block_word":0,"block_app":0,"credit_score":80,"user_ability":1024,"urank":9}
+                userEntity = new Gson().fromJson(result.toString(), UserEntity.class);
+                if (userEntity != null) {
 
-                        Glide.with(getActivity()).load(userEntity.getProfile_image_url()).placeholder(R.mipmap.p_head_fail).into(myHead);
+                    Glide.with(getActivity()).load(userEntity.getProfile_image_url()).placeholder(R.mipmap.p_head_fail).into(myHead);
 
-                        myName.setText(userEntity.getScreen_name());
-                        String description = userEntity.getDescription();
-                        if (!TextUtils.isEmpty(description)) {
-                            myIntroduce.setText("简介:"+description);
-                        }else{
-                            myIntroduce.setText("简介:暂无介绍");
-                        }
-
-                        myWeibo.setText(userEntity.getStatuses_count()+"");
-                        myFollowers.setText(userEntity.getFollowers_count()+"");
-                        myFriends.setText(userEntity.getFriends_count()+"");
-
-                       // "口吐鲜血。经查该男子已连续上网9小…… http://t.cn/RihpM46 ​"
+                    myName.setText(userEntity.getScreen_name());
+                    String description = userEntity.getDescription();
+                    if (!TextUtils.isEmpty(description)) {
+                        myIntroduce.setText("简介:" + description);
+                    } else {
+                        myIntroduce.setText("简介:暂无介绍");
                     }
-                }else{
+
+                    myWeibo.setText(userEntity.getStatuses_count() + "");
+                    myFollowers.setText(userEntity.getFollowers_count() + "");
+                    myFriends.setText(userEntity.getFriends_count() + "");
+
+                    // "口吐鲜血。经查该男子已连续上网9小…… http://t.cn/RihpM46 ​"
                 }
-            }
+             }
+
             @Override
-            public WeiboParameters onPararts() {
-                weiboParameters.put(WBConstants.AUTH_ACCESS_TOKEN,sharpUtils.getToken().getToken());
-                weiboParameters.put(WBConstants.GAME_PARAMS_UID,sharpUtils.getToken().getUid());
-                return weiboParameters;
+            public void onError(String result) {
+
             }
-        }.get();
-
+        });
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

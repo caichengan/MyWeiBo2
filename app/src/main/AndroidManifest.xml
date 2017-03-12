@@ -35,6 +35,16 @@
 
         <activity android:name=".activity.UrlBlogActivity"
             android:configChanges="keyboardHidden|orientation"/>
+        <activity android:name=".activity.LoadImgActivity"
+            android:configChanges="keyboardHidden|orientation"/>
+
+        <activity android:name=".activity.ReportWeiBoActivity"
+            android:configChanges="keyboardHidden|orientation"/>
+        <activity android:name=".activity.WeiBoCommentActivity"
+            android:configChanges="keyboardHidden|orientation"/>
+
+        <activity android:name=".activity.WeiBoDetailActivity"
+            android:configChanges="keyboardHidden|orientation"/>
 
         <provider
             android:name=".provide.DatabaseHelpProvider"

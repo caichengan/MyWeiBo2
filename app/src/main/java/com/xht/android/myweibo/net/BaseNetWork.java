@@ -43,33 +43,6 @@ public abstract class BaseNetWork {
             }
 
             onFinish(response,success);
-           /* JsonParser parser=new JsonParser();
-            JsonElement jsonElement=parser.parse(s);
-            if (jsonElement.isJsonObject()){
-                JsonObject object=jsonElement.getAsJsonObject();
-                if (object.has("error_code")){
-
-                    response.code=object.get("error_code").getAsInt();
-
-                }
-                if (object.has("reeor")){
-
-                    response.message=object.get("error").getAsString();
-                }
-                if (object.has("statuses")){
-                    response.responer=object.get("statuses").toString().trim();
-                    success=true;
-                }else
-                if (object.has("users")){
-                    response.responer=object.get("users").toString();
-                    success=true;
-                }else
-                if (object.has("comments")){
-                    response.responer=object.get("comments").toString();
-                    success=true;
-                }
-            }*/
-
 
         }
 
