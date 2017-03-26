@@ -76,23 +76,11 @@
         android:layout_height="wrap_content">
         <ImageView
             android:id="@+id/imgPicture"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_width="200dp"
             android:src="@mipmap/ic_launcher"
             android:layout_marginLeft="1dp"
-            android:layout_height="100dp" />
-        <ImageView
-            android:id="@+id/imgPicture1"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_marginLeft="1dp"
-            android:layout_height="100dp" />
-        <ImageView
-            android:id="@+id/imgPicture2"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_marginLeft="1dp"
-            android:layout_height="100dp" />
+            android:layout_height="200dp" />
+
     </LinearLayout>
 
 
@@ -120,23 +108,12 @@
             android:layout_height="wrap_content">
             <ImageView
                 android:id="@+id/imgChangePic"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_width="200dp"
                 android:src="@mipmap/ic_launcher"
                 android:layout_marginLeft="1dp"
-                android:layout_height="100dp" />
-            <ImageView
-                android:id="@+id/imgChangePic1"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_marginLeft="1dp"
-                android:layout_height="100dp" />
-            <ImageView
-                android:id="@+id/imgChangePic2"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_marginLeft="1dp"
-                android:layout_height="100dp" />
+                android:layout_height="200dp" />
+
+
         </LinearLayout>
 
     </LinearLayout>

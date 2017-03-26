@@ -10,6 +10,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.xht.android.myweibo.R;
+import com.xht.android.myweibo.utils.BitmapHelper;
+import com.xht.android.myweibo.utils.TimeFormatUtils;
+import com.xht.android.myweibo.utils.Utils;
 
 import java.util.List;
 
@@ -74,11 +77,9 @@ public class ListViewCommentAdapter extends BaseAdapter {
         holder.comment.setText(commentItem.getContext());
         holder.commentListName.setText(commentItem.getName());
 
+        //holder.commentListTime.setText(""+ TimeFormatUtils.getTimes(commentItem.getTime()));
         Glide.with(mContext).load(commentItem.getUrlHD()).crossFade().placeholder(R.mipmap.p_head_fail).
                 into(holder.commentListHead);
-
-
-
 
         return convertView;
     }

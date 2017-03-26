@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_gravity="center"
@@ -38,22 +38,24 @@
         android:layout_marginRight="10dp"
         android:background="@android:color/darker_gray"
         android:layout_height="0.01dp"/>
-   <include layout="@layout/item_comment"/>
-
+   <!--<include layout="@layout/item_comment"/>
+-->
     <View
         android:layout_width="match_parent"
         android:background="@android:color/darker_gray"
         android:layout_height="0.001dp"/>
     <ListView
-        android:layout_width="match_parent"
         android:id="@+id/listViewComment"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
         android:layout_height="wrap_content">
 
     </ListView>
+
     <View
         android:layout_width="match_parent"
-        android:layout_weight="1"
-        android:layout_height="match_parent"/>
+        android:background="@android:color/darker_gray"
+        android:layout_height="0.001dp"/>
 
 
     <LinearLayout
@@ -61,19 +63,22 @@
         android:layout_width="match_parent"
         android:orientation="horizontal"
         android:visibility="gone"
-        android:layout_height="wrap_content">
+        android:background="@drawable/bottom_bar"
+        android:layout_height="50dp">
         <EditText
             android:id="@+id/edComment"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_margin="3dp"
+            android:background="@drawable/btn_edit_search_normal"
             android:hint="评论"
             android:layout_height="match_parent" />
-        <Button
+        <TextView
             android:id="@+id/btnComment"
-            android:layout_width="wrap_content"
+            android:layout_width="60dp"
             android:text="提交"
-            android:layout_margin="5dp"
+            android:gravity="center"
+            android:layout_margin="8dp"
             android:background="@drawable/btn_background_circle"
             android:layout_height="match_parent" />
     </LinearLayout>

@@ -204,13 +204,9 @@ public class RecycleAdapter extends RecyclerView.Adapter {
 
             newListHead = (ImageView) itemView.findViewById(R.id.newListHead);
             imgPicture = (ImageView) itemView.findViewById(R.id.imgPicture);
-            imgPicture1 = (ImageView) itemView.findViewById(R.id.imgPicture1);
-            imgPicture2 = (ImageView) itemView.findViewById(R.id.imgPicture2);
             linPic = (LinearLayout) itemView.findViewById(R.id.linPic);
             ChangePic = (LinearLayout) itemView.findViewById(R.id.ChangePic);
             imgChangePic = (ImageView) itemView.findViewById(R.id.imgChangePic);
-            imgChangePic1 = (ImageView) itemView.findViewById(R.id.imgChangePic1);
-            imgChangePic2 = (ImageView) itemView.findViewById(R.id.imgChangePic2);
 
             newListName = (TextView) itemView.findViewById(R.id.newListName);
             newSources = (TextView) itemView.findViewById(R.id.newSources);

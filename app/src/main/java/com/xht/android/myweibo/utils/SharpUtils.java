@@ -18,6 +18,7 @@ public class SharpUtils {
     private static SharpUtils instance;
     private static final String Sp_NAME="weibo";
     private static final  String ACCESS_TOKEN="ACCESS_TOKEN";
+    private static final  String ID="ID";
     private static final String IS_LOGIN="IS_LOGIN";
 
     public static SharpUtils getInstance(Context mContext){
@@ -37,6 +38,16 @@ public class SharpUtils {
         editor.putBoolean(IS_LOGIN,true).commit();
 
     }
+
+    public void saveCommentId(String id){
+        editor.putString(ID,id).commit();
+
+    }
+    public String getCommentId(){
+       return mSharedferences.getString(ID,"");
+    }
+
+
     public boolean isLogin(){
         return  mSharedferences.getBoolean(IS_LOGIN,false);
     }

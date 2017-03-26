@@ -81,19 +81,47 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <ImageView
-            android:visibility="gone"
+        <com.xht.android.myweibo.view.NoScrollGridView
             android:id="@+id/reportImg"
-            android:layout_margin="10dp"
-            android:layout_width="150dp"
-            android:layout_height="150dp" />
+            android:layout_width="match_parent"
+            android:layout_margin="1dp"
+            android:numColumns="3"
+            android:stretchMode="columnWidth"
+            android:horizontalSpacing="2dp"
+            android:verticalSpacing="3dp"
+            android:layout_height="wrap_content">
+
+        </com.xht.android.myweibo.view.NoScrollGridView>
 
     </LinearLayout>
 
-    <RelativeLayout
+    <LinearLayout
+        android:id="@+id/RetReport"
+        android:orientation="vertical"
         android:layout_width="match_parent"
+        android:visibility="gone"
         android:gravity="center_horizontal"
-        android:layout_height="40dp">
+        android:layout_height="wrap_content">
 
-    </RelativeLayout>
+        <TextView
+            android:id="@+id/RetReportContent"
+            android:layout_width="match_parent"
+            android:text="转发"
+            android:layout_margin="10dp"
+            android:layout_height="wrap_content" />
+
+        <com.xht.android.myweibo.view.NoScrollGridView
+            android:id="@+id/RetReportImg"
+            android:layout_width="match_parent"
+            android:layout_margin="1dp"
+            android:numColumns="3"
+            android:visibility="gone"
+            android:stretchMode="columnWidth"
+            android:horizontalSpacing="2dp"
+            android:verticalSpacing="3dp"
+            android:layout_height="wrap_content">
+
+        </com.xht.android.myweibo.view.NoScrollGridView>
+
+    </LinearLayout>
 </LinearLayout>

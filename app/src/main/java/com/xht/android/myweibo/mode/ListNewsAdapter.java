@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.xht.android.myweibo.R;
 import com.xht.android.myweibo.activity.LoadImgActivity;
+import com.xht.android.myweibo.activity.LoadOneImgActivity;
 import com.xht.android.myweibo.activity.ReportWeiBoActivity;
 import com.xht.android.myweibo.activity.UrlBlogActivity;
 import com.xht.android.myweibo.activity.UserActivity;
@@ -55,11 +56,15 @@ public class ListNewsAdapter extends BaseAdapter {
     private static final  String NAME="@([\u4e00-\u9fa5A-z0-9_]*)";//人名
     private static final  String URL="http://.*";//Url
 
+    private ArrayList<String> listPics;
+    private ArrayList<String> listRetPics;
 
     public ListNewsAdapter(FragmentActivity activity, List<StatusEntity.StatusesBean> mListStatuses) {
         this.mContext=activity;
         this.mListDatas=mListStatuses;
         sharpUtils=SharpUtils.getInstance(mContext);
+        listPics=new ArrayList<>();
+        listRetPics=new ArrayList<>();
     }
 
 
@@ -94,15 +99,11 @@ public class ListNewsAdapter extends BaseAdapter {
             holder. newSources = (TextView) convertView.findViewById(R.id.newSources);
             holder.uresContent = (TextView) convertView.findViewById(R.id.uresContent);
             holder.imgPicture = (ImageView) convertView.findViewById(R.id.imgPicture);
-            holder. imgPicture1 = (ImageView) convertView.findViewById(R.id.imgPicture1);
-            holder. imgPicture2 = (ImageView) convertView.findViewById(R.id.imgPicture2);
 
             holder.linPic = (LinearLayout) convertView.findViewById(R.id.linPic);
             holder.linContent = (LinearLayout) convertView.findViewById(R.id.linContent);
             holder.transpond = (TextView) convertView.findViewById(R.id.transpond);//转发内容
             holder.imgChangePic = (ImageView) convertView.findViewById(R.id.imgChangePic);//转发图片
-            holder. imgChangePic1 = (ImageView) convertView.findViewById(R.id.imgChangePic1);
-            holder.imgChangePic2 = (ImageView) convertView.findViewById(R.id.imgChangePic2);
             holder.ChangePic = (LinearLayout) convertView.findViewById(R.id.ChangePic);
             holder.linTranspond = (LinearLayout) convertView.findViewById(R.id.linTranspond);
 
@@ -173,7 +174,7 @@ public class ListNewsAdapter extends BaseAdapter {
             holder.linPic.setVisibility(View.VISIBLE);
             Glide.with(mContext)
                     .load(bmiddle_pic)
-                    .placeholder(R.mipmap.p_head_fail)
+                    .placeholder(R.mipmap.ic_launcher)
                     .crossFade()
                     .into(holder.imgPicture);
         }else {
@@ -187,8 +188,7 @@ public class ListNewsAdapter extends BaseAdapter {
 
                     Bundle bundle=new Bundle();
                     bundle.putString("url",bmiddle_pic);
-                    Toast.makeText(mContext, "--------"+bmiddle_pic, Toast.LENGTH_SHORT).show();
-                    IntentUtils.startActivityNumber((Activity) mContext,bundle, LoadImgActivity.class);
+                    IntentUtils.startActivityNumber((Activity) mContext,bundle, LoadOneImgActivity.class);
 
                 }
             }
@@ -206,6 +206,13 @@ public class ListNewsAdapter extends BaseAdapter {
                 String[] split = thumbnail_pic.replace("{", "").replace("}", "").split("=");
                 String thumbnailChange = thumbnail_pic.substring(index+1, thumbnail_pic.length() - 1);
                 LogHelper.i(TAG,"----------retweetedStatusPicUrls--------"+thumbnailChange);
+
+                if (thumbnailChange.contains("thumbnail")){
+
+                    thumbnailChange=  thumbnailChange.replace("thumbnail","bmiddle");
+
+                }
+
                 holder.linTranspond.setVisibility(View.VISIBLE);
                 Glide.with(mContext).load(thumbnailChange).
                         error(R.mipmap.ic_launcher).placeholder(R.mipmap.p_head_fail).into(holder.imgChangePic);
@@ -220,10 +227,7 @@ public class ListNewsAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 //头像点击进入用户具体信息
-                Toast.makeText(mContext, "头像", Toast.LENGTH_SHORT).show();
-                bundle.putLong("uid",mListDatas.get(position).getUser().getId());
-                bundle.putString("url",mListDatas.get(position).getUser().getUrl());
-                LogHelper.i(TAG,"------url--"+mListDatas.get(position).getUser().getUrl());
+                bundle.putLong("id",mListDatas.get(position).getUser().getId());
                 IntentUtils.startActivityNumber((Activity) mContext,bundle,UserActivity.class);
             }
         });
@@ -232,7 +236,8 @@ public class ListNewsAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 //转发
-                Toast.makeText(mContext, "转发", Toast.LENGTH_SHORT).show();
+                listPics.clear();
+                listRetPics.clear();
                 /**
                  * access_token 	true 	string 	采用OAuth授权方式为必填参数，OAuth授权后获得。
                  id 	true 	int64 	要转发的微博ID。
@@ -241,15 +246,42 @@ public class ListNewsAdapter extends BaseAdapter {
                  rip 	false 	string
                  */
 
-                List<StatusEntity.StatusesBean.PicUrlsBean> picUrls = mListDatas.get(position).getPic_urls();
+                List<StatusEntity.StatusesBean.PicUrlsBean> picUrls = publicLine.getPic_urls();
                 bundle.putString("accessToken", SharpUtils.getInstance(mContext).getToken().getToken());
                 bundle.putLong("id", mListDatas.get(position).getId());
                 bundle.putString("text", mListDatas.get(position).getText());
+                bundle.putString("imgUrl", "" + bmiddle_pic);
+                LogHelper.i(TAG,"--------pos==url------"+bmiddle_pic);
+                LogHelper.i(TAG,"--------id------"+mListDatas.get(position).getId());
 
-                    bundle.putString("imgUrl", "" + bmiddle_pic);
-                    LogHelper.i(TAG,"--------pos==url------"+bmiddle_pic);
+                StatusEntity.StatusesBean.RetweetedStatusBean retweeted_status = publicLine.getRetweeted_status();
+                if (retweeted_status!=null){
+                    bundle.putString("chuangfa","yes");
+                    bundle.putLong("ret_id",retweeted_status.getId());
+                    bundle.putString("ret_text",retweeted_status.getText());
+                    List<?> pic_urls_retweeted = retweeted_status.getPic_urls();
+                    if (pic_urls_retweeted!=null&& pic_urls_retweeted.size()>0) {
+                        for (int i = 0; i < pic_urls_retweeted.size(); i++) {
+                            String thumbnail_pic = pic_urls_retweeted.get(i).toString();
+                            int index = thumbnail_pic.indexOf("=");
+                            String thumbnailChange = thumbnail_pic.substring(index+1, thumbnail_pic.length() - 1);
+                            LogHelper.i(TAG,"----------i--------"+thumbnailChange);
+                            listRetPics.add(thumbnailChange);
+                        }
+                        bundle.putStringArrayList("retPicsList",listRetPics);
+                    }
+                }else{
+                    bundle.putString("chuangfa","not");
+                }
+                for (int i = 0; i < picUrls.size(); i++) {
+                    String thumbnail_pic = picUrls.get(i).getThumbnail_pic();
+                    LogHelper.i(TAG,"-----"+thumbnail_pic);
+                    listPics.add(thumbnail_pic);
+                }
+                LogHelper.i(TAG,"----size---0-----"+picUrls.toString());
+                bundle.putStringArrayList("picList",  listPics);
+                LogHelper.i(TAG,"--------id------"+mListDatas.get(position).getId());
                 IntentUtils.startActivityNumber((Activity) mContext,bundle,ReportWeiBoActivity.class);
-
 
             }
         });
@@ -257,6 +289,9 @@ public class ListNewsAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 //评论
+
+                listPics.clear();
+                listRetPics.clear();
                 Toast.makeText(mContext, "评论", Toast.LENGTH_SHORT).show();
                 Bundle bundle = new Bundle();
 
@@ -267,18 +302,23 @@ public class ListNewsAdapter extends BaseAdapter {
                     bundle.putString("ret_text",retweeted_status.getText());
                     List<?> pic_urls_retweeted = retweeted_status.getPic_urls();
                     if (pic_urls_retweeted!=null&& pic_urls_retweeted.size()>0) {
-                        String thumbnail_pic = pic_urls_retweeted.get(0).toString();
+                        for (int i = 0; i < pic_urls_retweeted.size(); i++) {
+                            String thumbnail_pic = pic_urls_retweeted.get(i).toString();
+                            int index = thumbnail_pic.indexOf("=");
+                            String thumbnailChange = thumbnail_pic.substring(index+1, thumbnail_pic.length() - 1);
+                            LogHelper.i(TAG,"----------i--------"+thumbnailChange);
 
-                        int index = thumbnail_pic.indexOf("=");
-                        String thumbnailChange = thumbnail_pic.substring(index+1, thumbnail_pic.length() - 1);
-                        LogHelper.i(TAG,"----------retweetedStatusPicUrls--------"+thumbnailChange);
+                            listRetPics.add(thumbnailChange);
+                        }
 
-                        bundle.putString("ret_thumbnail",thumbnailChange);
+
+                       // bundle.putString("ret_thumbnail",thumbnailChange);
                     }
                 }else{
                     bundle.putString("chuangfa","not");
                 }
 
+                bundle.putStringArrayList("retPicsList",listRetPics);
 
                     bundle.putString("text",text);
                     bundle.putString("urlHD",publicLine.getUser().getProfile_image_url());
@@ -287,6 +327,23 @@ public class ListNewsAdapter extends BaseAdapter {
                     bundle.putLong("id",publicLine.getId());
                     bundle.putString("mid",publicLine.getMid());
                     bundle.putString("sources",publicLine.getSource());
+
+                List<StatusEntity.StatusesBean.PicUrlsBean> picUrls = publicLine.getPic_urls();
+
+                LogHelper.i(TAG,"----size---0-----"+picUrls.size());
+                for (int i = 0; i < picUrls.size(); i++) {
+
+                    String thumbnail_pic = picUrls.get(i).getThumbnail_pic();
+                    LogHelper.i(TAG,"-----"+thumbnail_pic);
+                    listPics.add(thumbnail_pic);
+                    //listPics
+
+                    // TODO
+                }
+                LogHelper.i(TAG,"----size---0-----"+picUrls.toString());
+
+                bundle.putStringArrayList("picList",  listPics);
+
                     if (!TextUtils.isEmpty(bmiddle_pic))
                     {
                         bundle.putString("bmiddle_pic",bmiddle_pic);
@@ -309,7 +366,7 @@ public class ListNewsAdapter extends BaseAdapter {
          TextView newListName;
          TextView newListTime;
          TextView newSources;
-         RelativeLayout linUser;
+         RelativeLayout linUser;//http://wx1.sinaimg.cn/thumbnail/deb13e2dly1fdz63u8neqj20au0auaas.jpg
          TextView uresContent;
          LinearLayout linContent;
          ImageView imgPicture;

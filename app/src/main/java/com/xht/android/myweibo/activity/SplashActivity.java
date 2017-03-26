@@ -52,26 +52,28 @@ public class SplashActivity extends Activity {
 
         //AnimationSet set=new AnimationSet(false);
 
-        ScaleAnimation scaleAnimation=new ScaleAnimation(0.5f, 1.0f ,0.5f, 1.0f);
+
+        AlphaAnimation alphaAnimation = new AlphaAnimation(0, 1.0f);
+        alphaAnimation.setDuration(3000);
+       /* ScaleAnimation scaleAnimation=new ScaleAnimation(0, 1.0f ,0, 1.0f);
         scaleAnimation.setRepeatMode(TRIM_MEMORY_BACKGROUND);
-        scaleAnimation.setDuration(3000);
+        scaleAnimation.setDuration(3000);*/
 
         /*RotateAnimation rotateAnimation = new RotateAnimation(0f, 360f,
                 Animation.RELATIVE_TO_SELF, 0.5f,
                 Animation.RELATIVE_TO_SELF, 0.5f);
         rotateAnimation.setDuration(3000);
 
-        AlphaAnimation alphaAnimation = new AlphaAnimation(0, 1.0f);
-        alphaAnimation.setDuration(3000);*/
+       */
 
       /*  set.addAnimation(scaleAnimation);
         set.addAnimation(rotateAnimation);
         set.addAnimation(alphaAnimation);
         splashImg.startAnimation(set);*/
 
-        splashImg.setAnimation(scaleAnimation);
+        splashImg.setAnimation(alphaAnimation);
 
-       scaleAnimation.setAnimationListener(new Animation.AnimationListener() {
+        alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
             }

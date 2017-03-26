@@ -1,5 +1,6 @@
 package com.xht.android.myweibo.fragment;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -14,16 +15,16 @@ import android.widget.TextView;
 import com.baoyz.widget.PullRefreshLayout;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
-import com.sina.weibo.sdk.constant.WBConstants;
 import com.sina.weibo.sdk.net.WeiboParameters;
 import com.xht.android.myweibo.R;
+import com.xht.android.myweibo.activity.LoadOneImgActivity;
+import com.xht.android.myweibo.activity.MyBlogsActivity;
+import com.xht.android.myweibo.activity.UserActivity;
 import com.xht.android.myweibo.mode.Constants;
 import com.xht.android.myweibo.mode.UserEntity;
-import com.xht.android.myweibo.net.BaseNetWork;
-import com.xht.android.myweibo.net.BaseURL;
-import com.xht.android.myweibo.net.HttpResponse;
 import com.xht.android.myweibo.net.INetListener;
 import com.xht.android.myweibo.net.NetWorkHelper;
+import com.xht.android.myweibo.utils.IntentUtils;
 import com.xht.android.myweibo.utils.LogHelper;
 import com.xht.android.myweibo.utils.SharpUtils;
 
@@ -43,7 +44,7 @@ import com.xht.android.myweibo.utils.SharpUtils;
  * <br>
  *    我的页面
  */
-public class MyFragment extends Fragment {
+public class MyFragment extends Fragment implements View.OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -68,6 +69,7 @@ public class MyFragment extends Fragment {
     private TextView myWeibo;
     private LinearLayout Myfollow;
     private TextView myFriends;
+    private TextView myLocation;
     private LinearLayout MyFriends;
     private TextView myFollowers;
     private LinearLayout MyFollowers;
@@ -133,6 +135,8 @@ public class MyFragment extends Fragment {
                         myIntroduce.setText("简介:暂无介绍");
                     }
 
+                    myLocation.setText(userEntity.getLocation());
+
                     myWeibo.setText(userEntity.getStatuses_count() + "");
                     myFollowers.setText(userEntity.getFollowers_count() + "");
                     myFriends.setText(userEntity.getFriends_count() + "");
@@ -167,6 +171,7 @@ public class MyFragment extends Fragment {
         myWeibo = (TextView) view.findViewById(R.id.myWeibo);
         Myfollow = (LinearLayout) view.findViewById(R.id.Myfollow);
         myFriends = (TextView) view.findViewById(R.id.myFriends);
+        myLocation = (TextView) view.findViewById(R.id.myLocation);
         MyFriends = (LinearLayout) view.findViewById(R.id.MyFriends);
         myFollowers = (TextView) view.findViewById(R.id.myFollowers);
         MyFollowers = (LinearLayout) view.findViewById(R.id.MyFollowers);
@@ -175,6 +180,41 @@ public class MyFragment extends Fragment {
         myTaoBao = (LinearLayout) view.findViewById(R.id.myTaoBao);
         myNews = (LinearLayout) view.findViewById(R.id.myNews);
         mySetting = (LinearLayout) view.findViewById(R.id.mySetting);
+
+        lin01.setOnClickListener(this);
+        myHead.setOnClickListener(this);
+        myBlogs.setOnClickListener(this);
+        mySetting.setOnClickListener(this);
+        myBlogs.setOnClickListener(this);
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        Bundle bundle=new Bundle();
+        switch (v.getId()){
+
+            case R.id.lin01:
+
+                bundle.putLong("id",userEntity.getId());
+               // IntentUtils.startActivityNumber(getActivity(),bundle, UserActivity.class);
+                break;
+            case R.id.myHead:
+                bundle.putString("url",userEntity.getProfile_image_url());
+                IntentUtils.startActivityNumber(getActivity(),bundle, LoadOneImgActivity.class);
+
+                break;
+            case R.id.myBlogs:
+                bundle.putLong("id",userEntity.getId());
+                IntentUtils.startActivityNumber(getActivity(),bundle,MyBlogsActivity.class);
+
+
+                break;
+            case R.id.mySetting:
+
+                break;
+        }
+
     }
 }
 

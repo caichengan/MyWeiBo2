@@ -26,7 +26,6 @@ import java.util.List;
  */
 public class MainActivity extends FragmentActivity {
 
-
     private static final String TAG = "MainActivity";
     public static final String BRO_ACT_S = "com.xht.android.myweibo.bro_act";
 
@@ -50,9 +49,6 @@ public class MainActivity extends FragmentActivity {
         return mUserInfo;
     }
 
-
-
-
     /**
      * 三个切换的界面
      */
@@ -65,19 +61,10 @@ public class MainActivity extends FragmentActivity {
     private List<Fragment> mFragments=new ArrayList<>();
     int[] tabIds={R.id.radio_first,R.id.radio_txl,R.id.radio_my};
     int currentSelect=0;
-    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-        }
-    };
 
     @Override
     protected void onResume() {
         super.onResume();
-
-
     }
 
     @Override

@@ -11,7 +11,6 @@
         <ImageView
             android:id="@+id/mainSumbit"
             android:layout_width="wrap_content"
-            android:src="@mipmap/ic_launcher"
             android:layout_height="wrap_content" />
         <TextView
             android:id="@+id/mainName"
@@ -24,7 +23,7 @@
         <TextView
             android:id="@+id/mainFind"
             android:layout_width="wrap_content"
-            android:text="发现"
+            android:text="发博"
             android:textSize="16sp"
             android:layout_alignParentRight="true"
             android:gravity="center_vertical"

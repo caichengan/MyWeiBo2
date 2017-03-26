@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -62,7 +64,7 @@
 
         <TextView
             android:id="@+id/uresContent"
-            android:layout_margin="10dp"
+            android:layout_margin="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -72,44 +74,35 @@
         android:id="@+id/linPic"
         android:layout_width="match_parent"
         android:orientation="horizontal"
-        android:layout_margin="10dp"
+        android:layout_margin="5dp"
         android:layout_height="wrap_content">
-        <ImageView
-            android:id="@+id/imgPicture"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:src="@mipmap/ic_launcher"
-            android:layout_marginLeft="1dp"
-            android:layout_height="100dp" />
-        <ImageView
-            android:id="@+id/imgPicture1"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_marginLeft="1dp"
-            android:layout_height="100dp" />
-        <ImageView
-            android:id="@+id/imgPicture2"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_marginLeft="1dp"
-            android:layout_height="100dp" />
+
+        <com.xht.android.myweibo.view.NoScrollGridView
+            android:id="@+id/gridView"
+            android:layout_width="match_parent"
+            android:layout_margin="1dp"
+            android:numColumns="3"
+        android:stretchMode="columnWidth"
+        android:horizontalSpacing="2dp"
+        android:verticalSpacing="3dp"
+        android:layout_height="wrap_content">
+
+        </com.xht.android.myweibo.view.NoScrollGridView>
     </LinearLayout>
 
 
     <LinearLayout
         android:id="@+id/linTranspond"
         android:orientation="vertical"
-        android:padding="10dp"
+        android:padding="5dp"
         android:background="@color/colorGray1"
         android:visibility="visible"
-
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/transpond"
             android:layout_width="match_parent"
-
             android:layout_height="wrap_content" />
 
         <LinearLayout
@@ -118,25 +111,20 @@
             android:orientation="horizontal"
             android:layout_margin="10dp"
             android:layout_height="wrap_content">
-            <ImageView
-                android:id="@+id/imgChangePic"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:src="@mipmap/ic_launcher"
-                android:layout_marginLeft="1dp"
-                android:layout_height="100dp" />
-            <ImageView
-                android:id="@+id/imgChangePic1"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_marginLeft="1dp"
-                android:layout_height="100dp" />
-            <ImageView
-                android:id="@+id/imgChangePic2"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_marginLeft="1dp"
-                android:layout_height="100dp" />
+
+            <com.xht.android.myweibo.view.NoScrollGridView
+                android:id="@+id/trGridView"
+                android:layout_width="match_parent"
+                android:layout_margin="1dp"
+                android:numColumns="3"
+                android:stretchMode="columnWidth"
+                android:horizontalSpacing="2dp"
+                android:verticalSpacing="3dp"
+                android:layout_height="wrap_content">
+
+            </com.xht.android.myweibo.view.NoScrollGridView>
+
+
         </LinearLayout>
 
     </LinearLayout>

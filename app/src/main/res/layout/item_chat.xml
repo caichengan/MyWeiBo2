@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/linMyself"
+        android:layout_width="match_parent"
+        android:layout_margin="10dp"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignParentRight="true"
+            android:layout_height="70dp">
+
+
+
+            <TextView
+                android:id="@+id/myName"
+                android:text="破荒之安"
+                android:singleLine="true"
+                android:layout_above="@id/myHead"
+                android:layout_alignRight="@id/myHead"
+                android:layout_alignParentRight="true"
+                android:layout_width="wrap_content"
+
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/myContent"
+                android:layout_width="wrap_content"
+                android:textSize="17sp"
+                android:layout_toLeftOf="@id/myHead"
+                android:text="塞上风hi录得日内基本软"
+                android:layout_alignParentBottom="true"
+                android:gravity="center_vertical"
+                android:background="@drawable/asker_bubble"
+                android:layout_height="40dp" />
+            <ImageView
+                android:id="@+id/myHead"
+                android:layout_alignParentRight="true"
+                android:layout_width="40dp"
+                android:layout_alignParentBottom="true"
+                android:src="@mipmap/ic_launcher"
+                android:layout_height="45dp" />
+
+
+
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/linOther"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_gravity="center_vertical"
+        android:layout_height="70dp">
+
+
+        <TextView
+            android:id="@+id/otherName"
+            android:layout_width="wrap_content"
+            android:text="姓名"
+            android:layout_marginLeft="5dp"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:id="@+id/otherHead"
+            android:layout_width="40dp"
+            android:layout_below="@id/otherName"
+            android:src="@mipmap/ic_launcher"
+            android:layout_height="45dp" />
+
+        <TextView
+            android:layout_toRightOf="@id/otherHead"
+            android:id="@+id/otherContent"
+            android:layout_below="@id/otherName"
+            android:layout_width="wrap_content"
+            android:text="见覅号经济繁荣对哦脾气的倔"
+            android:background="@drawable/answer_bubble"
+            android:gravity="center_vertical"
+            android:layout_height="40dp" />
+    </RelativeLayout>
+
+</LinearLayout>

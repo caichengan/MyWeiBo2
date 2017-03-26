@@ -1,7 +1,10 @@
 package com.xht.android.myweibo.fragment;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
@@ -13,16 +16,16 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.baoyz.widget.PullRefreshLayout;
-import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.sina.weibo.sdk.net.WeiboParameters;
 import com.xht.android.myweibo.R;
 import com.xht.android.myweibo.activity.MainActivity;
+import com.xht.android.myweibo.activity.SendWeiBoActivity;
 import com.xht.android.myweibo.activity.UrlBlogActivity;
 import com.xht.android.myweibo.activity.WeiBoCommentActivity;
-import com.xht.android.myweibo.activity.WeiBoDetailActivity;
 import com.xht.android.myweibo.mode.Constants;
 import com.xht.android.myweibo.mode.ListNewsAdapter;
 import com.xht.android.myweibo.mode.StatusEntity;
@@ -32,6 +35,7 @@ import com.xht.android.myweibo.utils.IntentUtils;
 import com.xht.android.myweibo.utils.LogHelper;
 import com.xht.android.myweibo.utils.SharpUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -76,10 +80,14 @@ public class MainFragment extends Fragment {
    // private RecycleAdapter mRecycleAdapter;
     private ListNewsAdapter mRecycleAdapter;
     private List<StatusEntity.StatusesBean> mListStatuses;
+
+    private ArrayList<String>  listPics;
+    private ArrayList<String>  listRetPics;
     private String subUrl;
     private String retUrl;
 
     public MainFragment() {
+
         // Required empty public constructor
     }
 
@@ -111,7 +119,18 @@ public class MainFragment extends Fragment {
         mMainActivity= (MainActivity) getActivity();
         weiboParameters=new WeiboParameters(Constants.APP_KEY);
         sharpUtils=SharpUtils.getInstance(getActivity());
+
+        listPics=new ArrayList<String>();
+        listRetPics=new ArrayList<String>();
         //获取授权的本用户的数据
+
+
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("com.xht.android.myweibo.udpate");
+        getActivity().registerReceiver(mBroadcastReceiver, filter);
+
+
 
     }
 
@@ -128,6 +147,9 @@ public class MainFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Bundle bundle = new Bundle();
+
+                listPics.clear();
+                listRetPics.clear();
                 String text = mListStatuses.get(position).getText();
                 if (text.contains("http")) {
                     int indexOf = text.lastIndexOf("http");
@@ -148,6 +170,11 @@ public class MainFragment extends Fragment {
                         LogHelper.i(TAG,"-----sub3-"+subUrl);
                     }
 
+                    if (subUrl.endsWith("")){
+
+                        LogHelper.i(TAG,"-----sub3-"+subUrl);
+                    }
+                    LogHelper.i(TAG,"-----sub-4---"+subUrl+"---------");
 
                     bundle.putString("URL",subUrl);
                     IntentUtils.startActivityNumber(getActivity(), bundle, UrlBlogActivity.class);
@@ -158,25 +185,51 @@ public class MainFragment extends Fragment {
                     bundle.putString("text",text);
                     StatusEntity.StatusesBean publicLine = mListStatuses.get(position);
                     String bmiddle_pic = publicLine.getBmiddle_pic();
+                    List<StatusEntity.StatusesBean.PicUrlsBean> picUrls = publicLine.getPic_urls();
+
+                    LogHelper.i(TAG,"----size---0-----"+picUrls.size());
+                    LogHelper.i(TAG,"----size---0-----"+listPics.toString());
+                    for (int i = 0; i < picUrls.size(); i++) {
+
+                        String thumbnail_pic = picUrls.get(i).getThumbnail_pic();
+                        LogHelper.i(TAG,"-----"+thumbnail_pic);
+                        listPics.add(thumbnail_pic);
+                        //listPics
+
+                        // TODO
+                    }
+                    LogHelper.i(TAG,"----size---0-----"+picUrls.toString());
+                    bundle.putStringArrayList("picList",  listPics);
 
                     StatusEntity.StatusesBean.RetweetedStatusBean retweeted_status = publicLine.getRetweeted_status();
                     if (retweeted_status!=null){
 
                         bundle.putString("chuangfa","yes");
                         bundle.putString("ret_text",retweeted_status.getText());
-                        List<?> pic_urls_retweeted = retweeted_status.getPic_urls();
+                        List<?> pic_urls_retweeted =  retweeted_status.getPic_urls();
+
+                        LogHelper.i(TAG,"---size----"+pic_urls_retweeted.size());
+                        LogHelper.i(TAG,"---size----"+pic_urls_retweeted.toString());
+
                         if (pic_urls_retweeted!=null&& pic_urls_retweeted.size()>0) {
-                            String thumbnail_pic = pic_urls_retweeted.get(0).toString();
 
-                            int index = thumbnail_pic.indexOf("=");
-                            String thumbnailChange = thumbnail_pic.substring(index+1, thumbnail_pic.length() - 1);
-                            LogHelper.i(TAG,"----------retweetedStatusPicUrls--------"+thumbnailChange);
+                            for (int i = 0; i < pic_urls_retweeted.size(); i++) {
+                                String thumbnail_pic = pic_urls_retweeted.get(i).toString();
+                                int index = thumbnail_pic.indexOf("=");
+                                String thumbnailChange = thumbnail_pic.substring(index+1, thumbnail_pic.length() - 1);
+                                LogHelper.i(TAG,"----------i--------"+thumbnailChange);
 
-                            bundle.putString("ret_thumbnail",thumbnailChange);
+                                listRetPics.add(thumbnailChange);
+                            }
+
+
+                            bundle.putString("ret_thumbnail",pic_urls_retweeted.get(0).toString());
                         }
                     }else{
                         bundle.putString("chuangfa","not");
                     }
+
+                    bundle.putStringArrayList("retPicsList",listRetPics);
 
                     bundle.putString("urlHD",publicLine.getUser().getProfile_image_url());
                     bundle.putString("name",publicLine.getUser().getName());
@@ -189,34 +242,9 @@ public class MainFragment extends Fragment {
                         bundle.putString("bmiddle_pic",bmiddle_pic);
                     }
                     LogHelper.i(TAG,"----text-----"+text,"--"+publicLine.getUser().getProfile_image_url()+publicLine.getUser().getName()+publicLine.getId()+"--mid-"+publicLine.getMid());
-
-
                     IntentUtils.startActivityNumber(getActivity(),bundle,WeiBoCommentActivity.class);
-
-
                 }
 
-
-                //TODO  转发  URL
-
-              /*  StatusEntity.StatusesBean.RetweetedStatusBean retweeted_status = mListStatuses.get(position).getRetweeted_status();
-                if (retweeted_status!=null){
-                    String mRetweeted =retweeted_status .getText();
-
-                    if (!TextUtils.isEmpty(mRetweeted)) {
-                        LogHelper.i(TAG,"---------------------"+mRetweeted.toString());
-                        if (mRetweeted.contains("http")) {
-                            int indexOf = mRetweeted.lastIndexOf("http");
-                            retUrl = mRetweeted.substring(indexOf, mRetweeted.length() - 1);
-                            LogHelper.i(TAG, "-----retwUrl--" + retUrl);
-                            bundle.putString("RET", retUrl);
-                            IntentUtils.startActivityNumber(getActivity(), bundle, UrlBlogActivity.class);
-
-                        }
-                    }else {
-                        App.getInstance().showToast("无URL");
-                    }
-                }*/
             }
         });
         swipeRefreshLayout = (PullRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
@@ -239,6 +267,21 @@ public class MainFragment extends Fragment {
 
         getWeiBoDatasMain();
 
+        /**
+         * 发微博的按钮  TODO
+         */
+        mainFind.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Bundle bundle=new Bundle();
+
+
+                IntentUtils.startActivityNumberForResult(getActivity(),bundle,SendWeiBoActivity.class);
+
+            }
+        });
+
         return view;
     }
 
@@ -251,11 +294,12 @@ public class MainFragment extends Fragment {
 
     public void  getWeiBoDatasMain(){
 
+
         if (mListStatuses!=null){
             mListStatuses.clear();
         }
 
-        createProgressDialog("正在加载数据...");
+        createProgressDialog("正在刷新数据...");
         NetWorkHelper.getInstance(getActivity()).getNewsDatas(new INetListener() {
                     @Override
                     public void onSuccess(String result) {
@@ -299,5 +343,17 @@ public class MainFragment extends Fragment {
         }
     }
 
+    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver()
+    {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            String action = intent.getAction();
+            if (action.equals("com.xht.android.myweibo.udpate"))
+            {
+                getWeiBoDatasMain();
+            }
+        }
+    };
 }
 

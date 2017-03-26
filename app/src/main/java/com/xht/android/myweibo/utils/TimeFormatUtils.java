@@ -44,7 +44,7 @@ public class TimeFormatUtils {
 
     /**
      * 把 时间  yyyy-MM-dd hh:mm:ss  过滤掉为 年月日 的形式  -------yyyy/MM/dd
-     * @param time
+     * @param time"Sun Mar 12 19:36:11 +0800 2017"
      * @return
      */
     public static String getTimes(String time){

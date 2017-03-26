@@ -1,31 +1,40 @@
 package com.xht.android.myweibo.fragment;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.style.ForegroundColorSpan;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.baoyz.widget.PullRefreshLayout;
+import com.google.gson.Gson;
 import com.xht.android.myweibo.R;
-import com.xht.android.myweibo.utils.Utils;
-
-import org.w3c.dom.Text;
+import com.xht.android.myweibo.activity.ChatActivity;
+import com.xht.android.myweibo.mode.FriendAdapter;
+import com.xht.android.myweibo.mode.FriendEntity;
+import com.xht.android.myweibo.net.INetListener;
+import com.xht.android.myweibo.net.NetWorkHelper;
+import com.xht.android.myweibo.utils.IntentUtils;
+import com.xht.android.myweibo.utils.LogHelper;
+import com.xht.android.myweibo.view.ClearEditText;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 /**
  * Created by Administrator on 2017/1/7.
+ * <p>
+ * Created by Administrator on 2017/1/5.
+ * <p>
+ * Created by Administrator on 2017/1/5.
  */
 
 /**
@@ -47,36 +56,32 @@ public class MessageFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     private static final String TAG = "MessageFragment";
+    @InjectView(R.id.lvMessageFriend)
+    ListView lvMessageFriend;
+    @InjectView(R.id.swipeRefreshLayout)
+    PullRefreshLayout swipeRefreshLayout;
+    @InjectView(R.id.mClientEdit)
+    ClearEditText mClientEdit;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private ListView orderListView;
-    private PullRefreshLayout swipeRefreshLayout;
-    private ListView lvMessage;
-    private TextView text;
 
-    private static final  String TOPIC="#.+?#";//话题
-    private static final  String NAME="@([\u4e00-\u9fa5A-z0-9_]*)";//人名
-    private static final  String URL="http://.*";//Url
-    private static final  String EMOTION="\\[[\u4E00-\u9Fa50-zA-Z0-9]*\\]";//表情
+    private static final String TOPIC = "#.+?#";//话题
+    private static final String NAME = "@([\u4e00-\u9fa5A-z0-9_]*)";//人名
+    private static final String URL = "http://.*";//Url
+    private static final String EMOTION = "\\[[\u4E00-\u9Fa50-zA-Z0-9]*\\]";//表情
 
-    private static final String str="#我们活动是否会很方便和计划#到货入库加班费和解放军erfh,@shsf的，所代表的是比较好，http://.conhu.vijn";
-    private SpannableString spannableString;
+    private List<FriendEntity.UsersBean> friendUser;
+    private FriendAdapter adapter;
+    private List<FriendEntity.UsersBean> searchList;
+    private boolean search;
 
 
     public MessageFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment GenJinFragment.
-     */
     // TODO: Rename and change types and number of parameters
     public static MessageFragment newInstance(String param1, String param2) {
         MessageFragment fragment = new MessageFragment();
@@ -95,31 +100,23 @@ public class MessageFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-
-        spannableString = new SpannableString(str);
-        //获取数据
-
-
-
     }
-
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view= inflater.inflate(R.layout.fragment_message, container, false);
+        View view = inflater.inflate(R.layout.fragment_message, container, false);
 
-       // lvMessage = (ListView)view. findViewById(R.id.lvGetNews);
 
-        text = (TextView) view.findViewById(R.id.text);
+       /* text = (TextView) view.findViewById(R.id.text);
         spannableString = new SpannableString(str);
         HightLignt(str, Pattern.compile(TOPIC));
         HightLignt(str, Pattern.compile(URL));
 
-        text.setText(spannableString);
+        text.setText(spannableString);*/
 
-        swipeRefreshLayout = (PullRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
+        ButterKnife.inject(this, view);
 
         swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
             @Override
@@ -134,56 +131,122 @@ public class MessageFragment extends Fragment {
                 }, 3000);
             }
         });
+        searchList = new ArrayList<>();
+        getFriendsNumber();
 
+
+
+        mClientEdit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String searchKey = mClientEdit.getText().toString();
+
+                searchList.clear();
+                LogHelper.i(TAG,"-------"+searchKey.toString());
+
+                if (!TextUtils.isEmpty(searchKey)) {
+                    for (int i = 0; i < friendUser.size(); i++) {
+                        boolean contains = friendUser.get(i).getName().contains(searchKey);
+                        if (contains) {
+                            searchList.add(friendUser.get(i));
+
+                            LogHelper.i(TAG,"-----"+friendUser.get(i).getName());
+                        }
+                    }
+                    LogHelper.i(TAG,"------"+searchList.size());
+
+                    search = true;
+                    adapter=new FriendAdapter(getActivity(),searchList);
+                    lvMessageFriend.setAdapter(adapter);
+                }else{
+                    LogHelper.i(TAG,"---33----");
+                    getFriendsNumber();
+                }
+
+            }
+        });
+
+
+
+        lvMessageFriend.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                if (search){
+
+                    Bundle bundle = new Bundle();
+                    bundle.putLong("uid", searchList.get(position).getId());
+                    bundle.putString("name", searchList.get(position).getName());
+
+                    bundle.putString("imgHd", searchList.get(position).getProfile_image_url());
+                    IntentUtils.startActivityNumberForResult(getActivity(), bundle, ChatActivity.class);
+
+                }else {
+                    Bundle bundle = new Bundle();
+                    bundle.putLong("uid", friendUser.get(position).getId());
+                    bundle.putString("name", friendUser.get(position).getName());
+
+                    bundle.putString("imgHd", friendUser.get(position).getProfile_image_url());
+                    IntentUtils.startActivityNumberForResult(getActivity(), bundle, ChatActivity.class);
+                }
+
+            }
+        });
         return view;
     }
 
-
-    /** 高亮显示
-     *
-     * @param str
-     * @param pattern
+    /**
+     * 搜索好友  TODO
      */
-    public  void HightLignt(String str,Pattern pattern){
-
-
-
-
-        List<HashMap<String,String>> list=getStartAndEnd(str,pattern);
-        for (HashMap<String,String> map:list){
-
-            /**
-             * 文本高亮显示 TODO
-             */
-            ForegroundColorSpan foregroundColorSpan=new ForegroundColorSpan(Color.GREEN);
-            spannableString.setSpan(foregroundColorSpan,Integer.parseInt(map.get("start")),
-                    Integer.parseInt(map.get("end")), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        }
-    }
 
     /**
-     *  匹配正则表达式， 获取头跟尾
-     * @param str    字符串
-     * @param pattern 正则表达式
-     * @return
+     * 获取用户朋友列表
      */
-    public static List<HashMap<String,String>> getStartAndEnd(String str,Pattern pattern){
+    private void getFriendsNumber() {
 
-        List<HashMap<String,String>> list=new ArrayList<>();
+        NetWorkHelper.getInstance(getActivity()).getFriendsList(100, new INetListener() {
+            @Override
+            public void onSuccess(String result) {
 
-        Matcher matcher=pattern.matcher(str);
-        while (matcher.find())  {
+                LogHelper.i(TAG, "----res--" + result.toString());
+                FriendEntity friendEntity = new Gson().fromJson(result.toString(), FriendEntity.class);
+                friendUser = friendEntity.getUsers();
 
-            HashMap<String, String> map = new HashMap<String, String>();
-            map.put("start",matcher.start()+"");
-            map.put("end",matcher.end()+"");
 
-            list.add(map);
-        }
 
-        return list;
+
+                adapter = new FriendAdapter(getActivity(),friendUser);
+                lvMessageFriend.setAdapter(adapter);
+                lvMessageFriend.setFastScrollEnabled(true);
+            }
+            @Override
+            public void onError(String result) {
+
+            }
+        });
+    }
+
+    public void setFriendAdaoter(List<FriendEntity.UsersBean> list){
+
     }
 
 
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.reset(this);
+    }
 }
 
