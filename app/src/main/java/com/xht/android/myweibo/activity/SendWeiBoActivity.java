@@ -235,31 +235,19 @@ public class SendWeiBoActivity extends Activity implements  View.OnClickListener
         if (!TextUtils.isEmpty(mTempStrUR8)){
             stringUrls.add(mTempStrUR8);
         }
-
-
         if (TextUtils.isEmpty(edText) && stringUrls.size()<=0){
             Toast.makeText(this, "先输入文字或图片", Toast.LENGTH_SHORT).show();
             return;
         }
-
-
         LogHelper.i(TAG,"------"+stringUrls.size());
-
         if (stringUrls.size()>0){
-
-
-
             //上传微博加图片
             sendWeiBoPhoto(edText,stringUrls);
         }else{
             //只上传文字微博
             sendWeiBoCharacter(edText);
         }
-
-
-
     }
-
     /**
      * 上传文字
      */
@@ -271,7 +259,6 @@ public class SendWeiBoActivity extends Activity implements  View.OnClickListener
                 Toast.makeText(SendWeiBoActivity.this, result, Toast.LENGTH_SHORT).show();
                 finish();
             }
-
             @Override
             public void onError(String result) {
 
@@ -279,12 +266,10 @@ public class SendWeiBoActivity extends Activity implements  View.OnClickListener
         });
 
     }
-
     /**
      * 上传文字加图片  TODO
      */
     private void sendWeiBoPhoto(String text,List<String> stringURLs) {
-
         createProgressDialogTitle("正在发布...");
         NetWorkHelper.getInstance(this).postSendWeiBoPhoto(text,stringURLs,new INetListener() {
             @Override

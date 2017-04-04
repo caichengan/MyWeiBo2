@@ -143,10 +143,11 @@ public class WeiBoCommentActivity extends Activity implements View.OnClickListen
         newSources.setText(Html.fromHtml(sources));
 
         //高亮内容
-        SpannableString spannable = new SpannableString(text);
-        Utils.HightLignt(spannable, text, Pattern.compile(TOPIC));
-        Utils.HightLignt(spannable, text, Pattern.compile(NAME));
-        uresContent.setText(spannable);
+        SpannableString spannedString = new SpannableString(text);
+        Utils.HightLignt(spannedString,text,Pattern.compile(TOPIC));
+        Utils. HightLignt(spannedString,text,Pattern.compile(NAME));
+        Utils.HightLignt(spannedString,text,Pattern.compile(URL));
+        uresContent.setText(spannedString);
 
         if (picLists.size()>0){
             linPic.setVisibility(View.VISIBLE);
@@ -220,6 +221,7 @@ public class WeiBoCommentActivity extends Activity implements View.OnClickListen
         linReport.setOnClickListener(this);
         imgBack.setOnClickListener(this);
         btnComment.setOnClickListener(this);
+        uresContent.setOnClickListener(this);
     }
     /**
      * 获取微博评论
@@ -360,6 +362,24 @@ public class WeiBoCommentActivity extends Activity implements View.OnClickListen
 
                ReportWeiBoMethod();
 
+                break;
+            case R.id.uresContent:
+                if (text.contains("http")) {
+                    LogHelper.i(TAG,"---转发--"+text);
+                    int indexOf = text.lastIndexOf("http");
+                    String subUrl = text.substring(indexOf, text.length() - 1);
+                    if (subUrl.endsWith(". ")) {
+                        int lastIndexOf = subUrl.lastIndexOf(".");
+                        subUrl = subUrl.substring(0, lastIndexOf - 1);
+                    }
+                    if (subUrl.contains(" ")) {
+                        String[] split = subUrl.split(" ");
+                        subUrl = split[0];
+                    }
+                    bundle.putString("URL", subUrl);
+                    IntentUtils.startActivityNumber(WeiBoCommentActivity.this, bundle, UrlBlogActivity.class);
+                }
+                    //跳转页面
                 break;
             default:
                 break;

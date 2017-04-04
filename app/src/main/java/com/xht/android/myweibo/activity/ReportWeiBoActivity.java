@@ -42,7 +42,7 @@ public class ReportWeiBoActivity extends Activity {
     private String ret_text;
     private String ret_thumbnail;
     private String chuangfa;
-    private Button btnCancel;
+    private TextView btnCancel;
     private TextView reportName;
     private LinearLayout name;
     private Button btnReport;
@@ -95,13 +95,12 @@ public class ReportWeiBoActivity extends Activity {
             retPicLists=bundle.getStringArrayList("retPicLists");
             //  TODO  处理转发图片
 
-            if (retPicLists.size()>0){
-                TranspondGridViewAdapter trGridAdapter=new TranspondGridViewAdapter(this, retPicLists);
-                RetReportImg.setAdapter(trGridAdapter);
+            if (retPicLists!=null) {
+                if (retPicLists.size() > 0) {
+                    TranspondGridViewAdapter trGridAdapter = new TranspondGridViewAdapter(this, retPicLists);
+                    RetReportImg.setAdapter(trGridAdapter);
+                }
             }
-
-
-
         } else {
             RetReport.setVisibility(View.GONE);
         }
@@ -126,7 +125,6 @@ public class ReportWeiBoActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //转发图片
-
                 Bundle bundle=new Bundle();
                 bundle.putString("url", retPicLists.get(position));
                 bundle.putString("type","1");
@@ -185,14 +183,15 @@ public class ReportWeiBoActivity extends Activity {
         LogHelper.i(TAG, "----id1--" + id);
         LogHelper.i(TAG, "----id11--" + ret_id);
         if ("yes".equals(chuangfa)) {
-            changId = ret_id;
+            if (ret_id==0) {
+                changId=id;
+            }else {
+                changId = ret_id;
+            }
+
         } else {
             changId = id;
         }
-
-        LogHelper.i(TAG, "-----changId---" + changId);
-
-        LogHelper.i(TAG,"--------"+edReport+"----changid--"+changId);
 
         NetWorkHelper.getInstance(this).getReportWeiBo( edReport, changId, new INetListener() {
             @Override
@@ -243,7 +242,7 @@ public class ReportWeiBoActivity extends Activity {
 
     private void initialize() {
 
-        btnCancel = (Button) findViewById(R.id.btnCancel);
+        btnCancel = (TextView) findViewById(R.id.btnCancel);
         reportName = (TextView) findViewById(R.id.reportName);
         name = (LinearLayout) findViewById(R.id.name);
         btnReport = (Button) findViewById(R.id.btnReport);

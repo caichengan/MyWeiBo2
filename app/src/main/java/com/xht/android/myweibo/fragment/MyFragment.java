@@ -1,6 +1,10 @@
 package com.xht.android.myweibo.fragment;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -11,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.baoyz.widget.PullRefreshLayout;
 import com.bumptech.glide.Glide;
@@ -19,6 +24,7 @@ import com.sina.weibo.sdk.net.WeiboParameters;
 import com.xht.android.myweibo.R;
 import com.xht.android.myweibo.activity.LoadOneImgActivity;
 import com.xht.android.myweibo.activity.MyBlogsActivity;
+import com.xht.android.myweibo.activity.SplashActivity;
 import com.xht.android.myweibo.activity.UserActivity;
 import com.xht.android.myweibo.mode.Constants;
 import com.xht.android.myweibo.mode.UserEntity;
@@ -27,6 +33,9 @@ import com.xht.android.myweibo.net.NetWorkHelper;
 import com.xht.android.myweibo.utils.IntentUtils;
 import com.xht.android.myweibo.utils.LogHelper;
 import com.xht.android.myweibo.utils.SharpUtils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Created by Administrator on 2017/1/7.
@@ -162,7 +171,6 @@ public class MyFragment extends Fragment implements View.OnClickListener {
     }
 
     private void initialize(View view) {
-
         myHead = (ImageView) view.findViewById(R.id.myHead);
         myName = (TextView) view.findViewById(R.id.myName);
         myIntroduce = (TextView) view.findViewById(R.id.myIntroduce);
@@ -207,13 +215,91 @@ public class MyFragment extends Fragment implements View.OnClickListener {
             case R.id.myBlogs:
                 bundle.putLong("id",userEntity.getId());
                 IntentUtils.startActivityNumber(getActivity(),bundle,MyBlogsActivity.class);
-
-
                 break;
             case R.id.mySetting:
 
+               settingDialog();
+
                 break;
         }
+    }
+
+    private void settingDialog() {
+
+
+        //通过builder构造器来构造
+
+        final AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
+
+
+
+        builder.setMessage("确定要清除登录数据，重新授权登陆？");
+
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+
+            @Override
+
+            public void onClick(DialogInterface dialog, int which) {
+
+                Toast.makeText(getActivity(), "点击确定", Toast.LENGTH_SHORT).show();
+
+                //取消授权
+                cancelOauth();
+            }
+
+        });
+
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+
+            @Override
+
+            public void onClick(DialogInterface dialog, int which) {
+
+                System.out.println("点击了取消按钮");
+
+            }
+
+        });
+
+        builder.show();
+
+
+    }
+
+    /**
+     * 取消用户授权
+     */
+    private void cancelOauth() {
+
+        NetWorkHelper.getInstance(getActivity()).cancelOauth(new INetListener() {
+            @Override
+            public void onSuccess(String result) {
+                LogHelper.i(TAG,"---11---"+result.toString());
+               // {"result":"true"}
+                try {
+                    JSONObject obj=new JSONObject(result.toString());
+
+                    String objString = obj.getString("result");
+                    LogHelper.i(TAG,"------"+objString);
+
+                    if (objString.equals("true")){
+
+                        sharpUtils.cancelOauth();
+
+                        IntentUtils.startActivityInfo(getActivity(), SplashActivity.class);
+                        getActivity().finish();
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(String result) {
+
+            }
+        });
 
     }
 }

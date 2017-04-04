@@ -43,10 +43,6 @@ import butterknife.InjectView;
 
 
 /**
- * A simple {@link android.app.Fragment} subclass.
- * Use the {@link MessageFragment#newInstance} factory method to
- * create an instance of this fragment.
- * <br>
  *    微博信息页面
  */
 public class MessageFragment extends Fragment {
@@ -76,12 +72,9 @@ public class MessageFragment extends Fragment {
     private FriendAdapter adapter;
     private List<FriendEntity.UsersBean> searchList;
     private boolean search;
-
-
     public MessageFragment() {
         // Required empty public constructor
     }
-
     // TODO: Rename and change types and number of parameters
     public static MessageFragment newInstance(String param1, String param2) {
         MessageFragment fragment = new MessageFragment();
@@ -102,29 +95,22 @@ public class MessageFragment extends Fragment {
 
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_message, container, false);
-
-
        /* text = (TextView) view.findViewById(R.id.text);
         spannableString = new SpannableString(str);
         HightLignt(str, Pattern.compile(TOPIC));
         HightLignt(str, Pattern.compile(URL));
-
         text.setText(spannableString);*/
-
         ButterKnife.inject(this, view);
-
         swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 swipeRefreshLayout.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-
                         // 刷新3秒完成
                         swipeRefreshLayout.setRefreshing(false);
                     }
@@ -133,8 +119,6 @@ public class MessageFragment extends Fragment {
         });
         searchList = new ArrayList<>();
         getFriendsNumber();
-
-
 
         mClientEdit.addTextChangedListener(new TextWatcher() {
             @Override
@@ -206,9 +190,6 @@ public class MessageFragment extends Fragment {
         return view;
     }
 
-    /**
-     * 搜索好友  TODO
-     */
 
     /**
      * 获取用户朋友列表
@@ -222,10 +203,6 @@ public class MessageFragment extends Fragment {
                 LogHelper.i(TAG, "----res--" + result.toString());
                 FriendEntity friendEntity = new Gson().fromJson(result.toString(), FriendEntity.class);
                 friendUser = friendEntity.getUsers();
-
-
-
-
                 adapter = new FriendAdapter(getActivity(),friendUser);
                 lvMessageFriend.setAdapter(adapter);
                 lvMessageFriend.setFastScrollEnabled(true);

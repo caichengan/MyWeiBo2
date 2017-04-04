@@ -125,39 +125,28 @@ public class ChatActivity extends Activity {
      * 发送消息给对方
      */
     private void sendMessageToFriends() {
-
         JSONObject object = new JSONObject();
-
         String text = chatEdit.getText().toString().trim();
-
-        LogHelper.i(TAG, "------" + text);
         if (TextUtils.isEmpty(text)) {
             return;
         }
-
-
         ChatBean chatBean = new ChatBean();
         chatBean.setImgURLHD(userHeadURL);
         chatBean.setType("0");
         chatBean.setmContent(text + "");
         chatBean.setmName(userName);
         listChatDatas.add(chatBean);
-
-
         NetWorkHelper.getInstance(this).postMessage(object, id, new INetListener() {
             @Override
             public void onSuccess(String result) {
                 LogHelper.i(TAG, "_" + result.toString());
             }
-
             @Override
             public void onError(String result) {
-
             }
         });
 
         ChatAdapter adapter = new ChatAdapter(this, listChatDatas);
-
         chatListView.setAdapter(adapter);
 
     }

@@ -28,34 +28,23 @@ public class MainActivity extends FragmentActivity {
 
     private static final String TAG = "MainActivity";
     public static final String BRO_ACT_S = "com.xht.android.myweibo.bro_act";
-
     public static final String PHONENUM_KEY = "phone_key";
     public static final String UID_KEY = "userId_key";
     public static final String UNAME_KEY = "userName_key";
     public static final String ACCESS_TOKEN = "access_token";
     public static UserInfo mUserInfo = new UserInfo();
-
-
-
-
     private RadioGroup mRadioGroup;
     private RadioButton mRadioButton1, mRadioButton2, mRadioButton3;
     private String uid;
     private String refresh_token;
     private String access_token;
     private String userName;
-
-    public static UserInfo getInstance() {
-        return mUserInfo;
-    }
-
     /**
      * 三个切换的界面
      */
     private MainFragment mMainFragment;
     private MessageFragment mMessageFragment;
     private MyFragment mMyFragment;
-
     private ViewPager mViewPager;
     FragmentPagerAdapter adapter;
     private List<Fragment> mFragments=new ArrayList<>();

@@ -6,7 +6,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_marginTop="20dp"
-        android:background="@android:color/holo_orange_light"
+        android:background="@android:color/holo_blue_dark"
         android:layout_height="40dp">
         <ImageView
             android:id="@+id/mainSumbit"
@@ -16,8 +16,7 @@
             android:id="@+id/mainName"
             android:layout_width="wrap_content"
             android:text="微博"
-            android:textSize="16sp"
-            android:textColor="@android:color/holo_red_light"
+            android:textSize="20sp"
             android:layout_centerInParent="true"
             android:layout_height="wrap_content" />
         <TextView

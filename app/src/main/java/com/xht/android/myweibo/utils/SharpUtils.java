@@ -1,5 +1,4 @@
 package com.xht.android.myweibo.utils;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -11,7 +10,6 @@ import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 /**
  * Created by Administrator on 2017/1/13.
  */
-
 public class SharpUtils {
     private static SharedPreferences mSharedferences;
     private static SharedPreferences.Editor editor;
@@ -20,34 +18,27 @@ public class SharpUtils {
     private static final  String ACCESS_TOKEN="ACCESS_TOKEN";
     private static final  String ID="ID";
     private static final String IS_LOGIN="IS_LOGIN";
-
     public static SharpUtils getInstance(Context mContext){
         if (instance==null){
             synchronized (SharpUtils.class){
                 instance=new SharpUtils();
                 mSharedferences=mContext.getSharedPreferences(Sp_NAME, Activity.MODE_APPEND);
-
                editor=    mSharedferences.edit();
             }
         }
         return instance;
-    }
 
+    }
     public void saveToken(Oauth2AccessToken token){
         editor.putString(ACCESS_TOKEN,new Gson().toJson(token)).commit();
         editor.putBoolean(IS_LOGIN,true).commit();
-
     }
-
     public void saveCommentId(String id){
         editor.putString(ID,id).commit();
-
     }
     public String getCommentId(){
        return mSharedferences.getString(ID,"");
     }
-
-
     public boolean isLogin(){
         return  mSharedferences.getBoolean(IS_LOGIN,false);
     }
@@ -57,7 +48,9 @@ public class SharpUtils {
             return null;
         }
         return new Gson().fromJson(json,Oauth2AccessToken.class);
-
     }
-
+    public void cancelOauth(){
+        editor.clear();
+        editor.commit();
+    }
 }

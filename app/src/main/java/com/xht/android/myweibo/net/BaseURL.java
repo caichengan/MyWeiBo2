@@ -24,6 +24,9 @@ public class BaseURL {
     //statuses/user_timeline 	获取某个用户最新发表的微博列表
     public static final String USER_TIMELINE=URLBASE+"user_timeline.json";
 
+//取消用户授权
+    public static final String USER_CANCELOAUYH="https://api.weibo.com/oauth2/revokeoauth2";
+
 
     //users/show 	获取用户信息users/show
     public static final String USER_FORMATION=URLUSER+"show.json";

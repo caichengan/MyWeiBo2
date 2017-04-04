@@ -144,12 +144,10 @@ public class NetWorkHelper {
         new BaseNetWork(mContext, BaseURL.FRIENDS_TIMELINE_URL){
             @Override
             protected void onFinish(HttpResponse response, boolean success) {
-
                 LogHelper.i(TAG,"------mainsucess---"+success);
                 LogHelper.i(TAG,"------mainsucess---"+response.responer.toString());
                 if (success) {
                     iNetListener.onSuccess(response.responer.toString());
-
                 }else{
                     iNetListener.onError(response.responer.toString());
                 }
@@ -481,6 +479,28 @@ public class NetWorkHelper {
                 return weiboParameters;
             }
         }.post();
+
+    }
+
+    /**
+     * 取消用户授权
+     */
+    public void cancelOauth(final INetListener inetListener) {
+
+        new BaseNetWork(mContext,BaseURL.USER_CANCELOAUYH){
+            @Override
+            protected void onFinish(HttpResponse response, boolean b) {
+                LogHelper.i(TAG,"---"+b);
+                LogHelper.i(TAG,"---"+response.responer.toString());
+                inetListener.onSuccess(response.responer);
+
+            }
+            @Override
+            public WeiboParameters onPararts() {
+                weiboParameters.put(WBConstants.AUTH_ACCESS_TOKEN,sharpUtils.getToken().getToken());
+                return weiboParameters;
+            }
+        }.get();
 
     }
 }

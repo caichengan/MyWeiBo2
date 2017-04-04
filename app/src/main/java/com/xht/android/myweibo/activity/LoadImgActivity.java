@@ -35,34 +35,16 @@ public class LoadImgActivity extends FragmentActivity {
         LogHelper.i(TAG,"---------"+urlImg);
 
         position = bundle.getInt("position");
-
         picLists = bundle.getStringArrayList("picLists");
-
-
-
         //ImageView loadImg= (ImageView) findViewById(R.id.loadImg);
         ViewPager viewPager= (ViewPager) findViewById(R.id.viewPager);
-
-
         FragmentPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-
         viewPager.setAdapter(adapter);
-        //viewPager.setAdapter(pageAdapter);
-
-
-     /*   Glide.with(this)
-                .load(urlImg)
-                .placeholder(R.mipmap.p_head_fail)
-                .crossFade()
-                .into(loadImg);*/
     }
-
     class  ViewPagerAdapter  extends FragmentPagerAdapter {
-
         public ViewPagerAdapter(FragmentManager fm) {
             super(fm);
         }
-
         @Override
         public Fragment getItem(int pos) {
             //新建一个Fragment来展示ViewPager item的内容，并传递参数
@@ -71,9 +53,7 @@ public class LoadImgActivity extends FragmentActivity {
             args.putString("arg", picLists.get(pos));
             fragment.setArguments(args);
             return fragment;
-
         }
-
         @Override
         public int getCount() {
             return picLists.size();
