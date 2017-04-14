@@ -20,10 +20,8 @@ import android.widget.Toast;
 
 import com.xht.android.myweibo.R;
 import com.xht.android.myweibo.mode.Constants;
-import com.xht.android.myweibo.net.BaseURL;
 import com.xht.android.myweibo.net.INetListener;
 import com.xht.android.myweibo.net.NetWorkHelper;
-import com.xht.android.myweibo.utils.AsyncImageLoader;
 import com.xht.android.myweibo.utils.BitmapHelper;
 import com.xht.android.myweibo.utils.BitmapUtils;
 import com.xht.android.myweibo.utils.LogHelper;
@@ -33,7 +31,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.content.ContentValues.TAG;
 
 
 /**
@@ -50,7 +47,6 @@ public class SendWeiBoActivity extends Activity implements  View.OnClickListener
     private Uri mCurFromCamare6;
     private Uri mCurFromCamare7;
     private Uri mCurFromCamare8;
-    private AsyncImageLoader imageLoader;
 
     private String mTempStrT;
     private String mTempStrURL; //将要上传的图片的路径

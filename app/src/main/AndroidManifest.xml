@@ -19,7 +19,7 @@
     <application
         android:allowBackup="true"
         android:name=".App"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/boke"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
